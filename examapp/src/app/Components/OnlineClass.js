@@ -11,6 +11,7 @@ export default function OnlineClass() {
     return () => {
       socket.off("user-joined", handleNewUserJoined);
       socket.off("incoming-call", handleIncomingCall);
+      socket.off("call-accepted", handlecallAccepted);
     };
   }, []);
   async function handleIncomingCall(data) {

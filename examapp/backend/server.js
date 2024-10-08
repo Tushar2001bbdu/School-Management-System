@@ -68,7 +68,6 @@ io.on('connection', (socket) => {
     socketToEmailMaping.set(socket.id,emailId)
     socket.join(classSection)
     socket.emit("joined-class",{classSection})
-    console.log("joined class",classSection)
     try{
       socket.broadcast.to(classSection).emit("user-joined",{emailId})
     }
