@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This project is a Student Management System integrated with AWS Rekognition for automated attendance. The system leverages AWS S3 for image storage, DynamoDB for student records, and Rekognition for facial recognition to track attendance of students and teachers.
 
-## Getting Started
+Features
+Automated Attendance System: Using AWS Rekognition, the system matches students' and teachers' faces to stored records.
+Student and Teacher Management: CRUD operations for managing student and teacher data.
+AWS Rekognition Integration: Identifies individuals based on face data and updates their attendance records.
+DynamoDB Integration: Stores facial recognition data and student records.
+AWS S3 Storage: Captures and stores webcam images in S3 buckets for processing and comparison.
+Technologies Used
+Node.js: Backend runtime environment.
+Express.js: Web framework for creating HTTP servers and REST APIs.
+Next.Js:For designing the front end
+MongoDB: Database for storing student and teacher information.
+AWS S3: Storage for webcam images.
+AWS Rekognition: Facial recognition to identify and verify users.
+AWS DynamoDB: NoSQL database to store facial recognition IDs.
+JavaScript/ES6: Backend logic.
+Table of Contents
+Getting Started
+Installation
+Usage
+AWS Setup
+Project Structure
+API Endpoints
+License
+Getting Started
+This guide will help you get the project up and running on your local machine for development and testing purposes.
 
-First, run the development server:
+Prerequisites
+Before you begin, make sure you have the following installed:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Node.js (v14 or higher)
+MongoDB (Local or Atlas)
+AWS account with access to S3, Rekognition, and DynamoDB
+Git (for cloning the repository)
+Installation
+Clone the repository:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+bash
+Copy code
+git clone https://github.com/yourusername/student-management-system.git
+cd student-management-system
+Install dependencies:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+bash
+Copy code
+npm install
+Set up environment variables:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Create a .env file at the root of your project and configure the following variables:
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+AWS_ACCESS_KEY_ID=<your-aws-access-key>
+AWS_SECRET_ACCESS_KEY=<your-aws-secret-access-key>
+AWS_REGION=<aws-region>
+S3_BUCKET_NAME_TEST=<your-s3-bucket-for-testing>
+S3_BUCKET_NAME_TRAIN=<your-s3-bucket-for-training>
+DYNAMO_DB_TABLE_NAME=<your-dynamodb-table>
+MONGODB_URI=<your-mongodb-uri>
+Run the server:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+bash
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+npm start
+The server will start on http://localhost:3001.
 
-## Deploy on Vercel
+Usage
+Uploading an Image
+Send a POST request with a base64 image to initiate the attendance recognition process:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+bash
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+POST /app/attendance
+Request Body:
+
+{
+  "url": "<base64-encoded-image>"
+}
+Response:
+If the face is recognized, the system will update the attendance of the corresponding student or teacher.
+If the face is not recognized, an error message will be returned.
+
+S3 Buckets:
+
+Create two S3 buckets:
+One for testing (school-management-system-bucket-testing)
+One for storing recognized images (school-management-system-bucket-training)
+Ensure you have the correct permissions for uploading images.
+Rekognition:
+
+Create a Rekognition collection named smsusers for storing face data.
+Ensure the role used by Rekognition has permissions to access S3 and DynamoDB.
+DynamoDB:
+
+Create a table named facerecognition with the following key:
+Primary key: RekognitionId (String)
+This table will store the recognized face IDs.
+Project Structure
+plaintext
+Copy code
+├── config/               # AWS Clients and configurations
+├── models/               # Mongoose models for MongoDB (Students, Teachers)
+├── routes/               # API routes
+├── controllers/          # Logic for handling attendance and recognition
+├── app.js                # Main entry point
+├── package.json          # Dependencies and scripts
+└── README.md             # This file
+API Endpoints
+POST /api/attendance: Uploads an image and updates attendance.
+GET /api/students/
+: Retrieves student details by roll number.
+POST /api/students: Adds a new student record.
+GET /api/teachers/
+: Retrieves teacher details.
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+Contributing
+Contributions are welcome! Please fork the repository and create a pull request with your changes.
+
+Fork the repository.
+Create a new branch (git checkout -b feature-branch).
+Make your changes.
+Commit and push to your branch (git push origin feature-branch).
