@@ -39,7 +39,6 @@ next-env.d.ts
 
 student-account-key.json
 teacher-account-key.json
-node_modules
 .env
 student_auth.js
 teacher_auth.js
