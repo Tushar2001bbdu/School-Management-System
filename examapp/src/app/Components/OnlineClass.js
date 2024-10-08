@@ -17,7 +17,7 @@ export default function OnlineClass() {
   async function handleIncomingCall(data) {
     console.log("someone is calling");
     const { fromEmail, offer } = data;
-    console.log("Incoming call from ", fromEmail);
+
     const answer = await peer.createAnswer(offer);
     socket.emit("call-accepted", {
       fromEmail,
@@ -25,16 +25,15 @@ export default function OnlineClass() {
     });
   }
   async function handleNewUserJoined(data) {
-    console.log("New user joined");
     const { emailId } = data;
-    console.log("new user joined", emailId);
+
     const offer = await peer.createOffer();
-    console.log("Offer: ", offer);
+
     socket.emit("call-user", { emailId, offer });
   }
   async function handlecallAccepted(data) {
-    const { from,answer } = data;
-    console.log("Call accepted by ", from);
+    const { answer } = data;
+
     await peer.setRemoteDes(answer);
   }
   return <div>hello world</div>;
