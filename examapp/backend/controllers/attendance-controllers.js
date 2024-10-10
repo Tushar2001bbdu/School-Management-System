@@ -1,8 +1,9 @@
 const attendanceService = require("../services/attendance");
 async function updateAttendance(req, res) {
   let image = req.body.url;
+  let rollno=req.body.rollno;
   try {
-    await attendanceService.updateAttendance(image);
+    await attendanceService.updateAttendance(image,rollno);
     return res
       .status(200)
       .send("Face match found and data retrieved successfully");

@@ -1,9 +1,8 @@
 const express = require("express");
-const teachers = require("../models/teachers");
-const students = require("../models/students");
+
 const Router = express.Router();
 const { body, validationResult } = require("express-validator");
-const studentresult = require("../models/examresult");
+
 require("dotenv").config();
 const admin = require("firebase-admin");
 const { authenticateTeacherToken } = require("../middlewares/auth");
@@ -28,26 +27,17 @@ Router.get(
 // Route for logging in for a teacher in the Student Management System
 Router.post(
   "/login",
- 
-  async (req, res) => {
-    try {
-     
+  authenticateTeacherToken,
 
-      // Logic for teacher login goes here (auth check, etc.)
-      // Assuming successful login logic is implemented.
-      res.status(200).send({
-        status: true,
-        message: "You have logged in successfully",
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send({ status: false, message: "Some error has occurred" });
-    }
-  }
+  teacherController.login
 );
 
 // Route to get List Of Students
-Router.get("/listOfStudents", authenticateTeacherToken, teacherController.getStudentsList);
+Router.get(
+  "/listOfStudents",
+  authenticateTeacherToken,
+  teacherController.getStudentsList
+);
 
 // Route to allow teacher to update marks of his/her students using his university roll no
 Router.patch(
@@ -59,18 +49,20 @@ Router.patch(
 // Route for password reset email
 Router.put(
   "/passwordResetEmail",
-  [
-    body("email", "Enter a valid email").isEmail(),
-  ],
+  [body("email", "Enter a valid email").isEmail()],
   async (req, res) => {
     try {
       const result = validationResult(req);
       if (!result.isEmpty()) {
-        return res.status(400).json({ success: "false", errors: result.array() });
+        return res
+          .status(400)
+          .json({ success: "false", errors: result.array() });
       }
 
       try {
-        const link = await app2.auth().generatePasswordResetLink(req.body.email);
+        const link = await app2
+          .auth()
+          .generatePasswordResetLink(req.body.email);
         console.log(link);
         res.status(200).send("A password reset email has been sent");
       } catch (error) {

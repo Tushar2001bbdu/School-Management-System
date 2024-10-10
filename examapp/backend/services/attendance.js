@@ -9,7 +9,7 @@ const { PutObjectCommand } = require("@aws-sdk/client-s3");
 const { SearchFacesByImageCommand } = require("@aws-sdk/client-rekognition");
 
 class attendance {
-  static async updateAttendance(url) {
+  static async updateAttendance(url,rollno) {
     const base64Data = url.replace(/^data:image\/\w+;base64,/, "");
     const buffer = Buffer.from(base64Data, "base64");
     const key = `webcams/${Date.now()}.jpg`;
@@ -18,7 +18,7 @@ class attendance {
       Key: key,
       Body: buffer,
       ContentType: "image/jpeg",
-      Metadata: { rollno: "121078897" },
+      Metadata: { rollno: rollno },
     };
 
     const testing_params = {
@@ -27,7 +27,7 @@ class attendance {
       Body: buffer,
 
       ContentType: "image/jpeg",
-      Metadata: { rollno: "121078897" },
+      Metadata: { rollno: rollno },
     };
 
     try {

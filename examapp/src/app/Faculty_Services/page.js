@@ -25,10 +25,9 @@ export default function page() {
         userDetails.email,
         userDetails.password
       );
-      const token = await userCredential.user.getIdToken(); // Get Firebase ID token
+      const token = await userCredential.user.getIdToken();
 
-      // You can now send the token to your API or store it in cookies for authentication
-      // Example: save token to localStorage (or better, use cookies)
+     
       localStorage.setItem("teacherFirebaseToken", token);
       User_Context.facultyLogin(userDetails);
       router.push("/Details")

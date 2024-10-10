@@ -14,6 +14,20 @@ catch(error){
     res.status(500).send({ status: 500,message:"internal server error" });
 }
 }
+exports.login=async (req, res) => {
+    try {
+     
+
+      
+      res.status(200).send({
+        status: true,
+        message: "You have logged in successfully",
+      });
+    } catch (error) {
+      
+      res.status(500).send({ status: false, message: "Some error has occurred" });
+    }
+  }
 exports.getStudentProfile=async(req,res)=>{
     try{
         let rollno = req.query.rollno;
