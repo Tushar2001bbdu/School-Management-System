@@ -8,23 +8,12 @@ export default function page() {
    const[emailId,setemailId]=useState(null);
    const[classSection,setClassSection]=useState(null);
    const[room,joinRoom]=useState(false)
-  useEffect(()=>{
-    try{
-      context.on("class-joined",display)
-    }
-    catch(error){
-      console.log("error occured while joining class",error)
-    }
-    
-  },[])
+ 
   async function display(text){
     console.log("your class joined section is",text)
   }
    async function joinClass(){
-   context.emit("join-class",{
-     emailId: emailId,
-     classSection: classSection,
-   })
+   
    joinRoom(true)
    }
    
@@ -46,7 +35,7 @@ export default function page() {
   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Join Online Class</button>
 </form>}
 
- {room===true && <OnlineClass/>}
+ {room===true && <OnlineClass roomId={classSection}/>}
     </div>
   )
 }

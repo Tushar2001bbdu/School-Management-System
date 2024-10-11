@@ -1,54 +1,88 @@
-import React, { useEffect, useContext } from "react";
-import { SocketContext } from "../Context/OnlineClassProvider";
-import { PeerContext } from "../Context/PeerProvider";
+import React, { useEffect, useRef, useState,useContext } from 'react';
+import {SocketContext} from "../Context/OnlineClassProvider"
+import io from 'socket.io-client';
+import Peer from 'peerjs';
 
-export default function OnlineClass() {
-  const socket = useContext(SocketContext);
-  const peer = useContext(PeerContext);
+const OnlineClass = (props) => {
+  const [peerId, setPeerId] = useState('');
+  const [roomId] = useState('room1'); // Static room ID for now, can be dynamic
+  const [stream, setStream] = useState(null);
+  const videoRef = useRef();
+  const remoteVideoRef = useRef();
+  const socket=useContext(SocketContext);
+  const peerRef = useRef();
+
+ 
 
   useEffect(() => {
-    socket.on("user-joined", handleNewUserJoined);
-    socket.on("incoming-call", handleIncomingCall);
-    socket.on("call-accepted", handleCallAccepted);
-    socket.on("ice-candidate", handleIceCandidate); // Listen for incoming ICE candidates
+   
+    // 2. Initialize PeerJS connection
+    peerRef.current = new Peer(undefined, {
+      host: 'localhost',
+      port: '3002',
+      path: '/peerjs',
+    });
 
-    return () => {
-      socket.off("user-joined", handleNewUserJoined);
-      socket.off("incoming-call", handleIncomingCall);
-      socket.off("call-accepted", handleCallAccepted);
-      socket.off("ice-candidate", handleIceCandidate); // Cleanup listener
-    };
-  }, [socket, peer]);
+    
+    peerRef.current.on('open', (id) => {
+      setPeerId(id);  
+      
+      socket.emit('join-room', props.roomId, id);
+    });
 
-  async function handleIncomingCall(data) {
-    console.log("Someone is calling from:", data.fromEmail);
-    const { offer } = data;
+    // 4. Get user media (webcam) and display it locally
+    navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: true,
+    }).then((mediaStream) => {
+      setStream(mediaStream);  // Set stream to state
+      videoRef.current.srcObject = mediaStream;  // Display own video
+    });
 
-    const answer = await peer.createAnswer(offer);
-    socket.emit("call-accepted", { fromEmail: data.fromEmail, answer });
-  }
-
-  async function handleNewUserJoined(data) {
-    const { emailId } = data;
-    console.log("New user joined:", emailId);
-
-    const offer = await peer.createOffer();
-    socket.emit("call-user", { emailId, offer });
-  }
-
-  async function handleCallAccepted(data) {
-    const { answer } = data;
-    console.log("Call accepted with answer:", answer);
-    await peer.setRemoteDes(answer);
-  }
-
-  function handleIceCandidate(candidate) {
-    if (candidate) {
-      peer.addIceCandidate(candidate).catch(error => {
-        console.error("Error adding received ICE candidate", error);
+    // 5. Handle incoming calls
+    peerRef.current.on('call', (call) => {
+      call.answer(stream);  // Answer incoming call with local stream
+      call.on('stream', (remoteStream) => {
+        console.log('Remote user connected');  // Log message
+        remoteVideoRef.current.srcObject = remoteStream;  // Display remote video stream
       });
-    }
-  }
+    });
 
-  return <div>Hello World</div>;
-}
+    // 6. Listen for 'user-connected' event and call the new user
+    socket.on('user-connected', (userId) => {
+      console.log(`User connected: ${userId}`);
+      callUser(userId);  // Call the newly connected user
+    });
+
+    // 7. Handle user disconnection
+    socket.on('user-disconnected', (userId) => {
+      console.log(`User disconnected: ${userId}`);
+    });
+
+   
+  }, [socket]);
+
+  // Function to call another user
+  const callUser = (userId) => {
+    const call = peerRef.current.call(userId, stream);
+    call.on('stream', (remoteStream) => {
+      remoteVideoRef.current.srcObject = remoteStream;  // Display remote video stream
+    });
+  };
+
+  return (
+    <div>
+      <h1>Peer.js + Socket.IO Video Chat</h1>
+      <div>
+        <h2>Your Video</h2>
+        <video ref={videoRef} autoPlay playsInline muted />
+      </div>
+      <div>
+        <h2>Remote Video</h2>
+        <video ref={remoteVideoRef} autoPlay playsInline />
+      </div>
+    </div>
+  );
+};
+
+export default OnlineClass;

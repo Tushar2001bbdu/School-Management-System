@@ -12,7 +12,7 @@ import { AdminProvider ,AdminContext} from "./Context/AdminProvider";
 import { FacultyProvider ,FacultyContext} from "./Context/FacultyProvider";
 import FacultySidebar from "./Components/FacultySideBar";
 import { SocketProvider } from "./Context/OnlineClassProvider";
-import { PeerProvider } from "./Context/PeerProvider";
+
 
 
 
@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
         <body className={inter.className}>
-        <PeerProvider>
+      
         <SocketProvider>
         <AdminProvider>
          <FacultyProvider>
@@ -59,7 +59,7 @@ export default function RootLayout({ children }) {
         
         </AdminProvider>
         </SocketProvider>
-        </PeerProvider>
+      
         
         </body>
         </html>

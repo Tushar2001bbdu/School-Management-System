@@ -17,7 +17,7 @@ const studentController = require("../controllers/student-controllers");
 Router.get(
   `/seeDetails`,
   authenticateStudentToken,
-  studentController.seeProfile(req, res)
+  studentController.seeProfile
 );
 //Route for logging in for a student in the Student Management System
 Router.post(
@@ -30,7 +30,7 @@ Router.post(
 Router.put(
   "/passwordResetEmail",
   authenticateStudentToken,
-  [body("email", "Enter a valid e-mail").isLength({ min: 3 })],
+ 
   async (req, res) => {
     try {
       const result = validationResult(req);
@@ -54,7 +54,7 @@ Router.put(
     }
   }
 );
-Router.get("/getResult", authenticateStudentToken, studentController.getResult);
+Router.get("/getResult", authenticateStudentToken, studentController.getStudentResult);
 
 Router.get(
   "/getDetails",
