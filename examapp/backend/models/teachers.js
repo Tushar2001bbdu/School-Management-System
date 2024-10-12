@@ -36,6 +36,10 @@ const TeachersSchema = new Schema({
         type: String,
         required: true,
     },
+    role: {
+        type: String,
+        default: 'teacher', // Automatically set to 'teacher'
+    },
     attendance: {
         value: {
             type: Number,
@@ -53,4 +57,5 @@ const TeachersSchema = new Schema({
 });
 
 module.exports = mongoose.model("Teachers", TeachersSchema);
+
 
