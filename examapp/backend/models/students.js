@@ -1,46 +1,53 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+
 const UsersSchema = new Schema({
-    email:{
-        type:String,
-        required:true,
-        unique:true
+    email: {
+        type: String,
+        required: true,
+        unique: true
     },
-    rollno:{
-        type:String,
-        required:true,
-        unique:true
+    rollno: {
+        type: String,
+        required: true,
+        unique: true,
+        validate: {
+            validator: v => /^1210/.test(v),
+            message: 'Roll number must start with 1210'
+        }
     },
-        name: {
-        type:String,
-        required:true
+    name: {
+        type: String,
+        required: true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
     },
-    course:{
-        type:String,
-        required:true
+    course: {
+        type: String,
+        required: true
     },
-    section:{
-        type:String,
-        required:true
+    section: {
+        type: String,
+        required: true
     },
     branch: {
-        type:String,
-        required:true
+        type: String,
+        required: true
     },
-    classteacher:{
-        type:String,
-        required:true
+    classteacher: {
+        type: String,
+        required: true
     },
-    teacherrollno:{
-        type:Number,
-        required:true
+    teacherrollno: {
+        type: Number,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
+});
 
-   
-  });
-  let users=mongoose.model('students',UsersSchema);
-  module.exports=users
+module.exports = mongoose.model('students', UsersSchema);
