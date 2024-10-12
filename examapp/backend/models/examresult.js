@@ -3,14 +3,13 @@ const { Schema } = mongoose;
 
 const ResultsSchema = new Schema({
   rollno: {
-    type: Number,
+    type: String,
     required: true,
     unique: true,
   },
 
   name: {
     type: String,
-    default: "Anil",
     required: true,
   },
   marks: {
@@ -33,6 +32,6 @@ const ResultsSchema = new Schema({
     },
   },
 });
-let Results = mongoose.model("result", ResultsSchema);
+let Results = mongoose.model("studentresult", ResultsSchema);
 
 module.exports = Results;
