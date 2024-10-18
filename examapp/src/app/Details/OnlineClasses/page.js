@@ -1,17 +1,15 @@
 "use client"
 import OnlineClass from '@/app/Components/OnlineClass'
-import { SocketContext } from '@/app/Context/OnlineClassProvider'
+import { OnlineClassContext } from '@/app/Context/OnlineClassProvider'
 import React,{useContext,useEffect,useState} from 'react'
 
 export default function page() {
-   const context=useContext(SocketContext);
+   const context=useContext(OnlineClassContext);
    const[emailId,setemailId]=useState(null);
    const[classSection,setClassSection]=useState(null);
    const[room,joinRoom]=useState(false)
  
-  async function display(text){
-    console.log("your class joined section is",text)
-  }
+ 
    async function joinClass(){
    
    joinRoom(true)
@@ -35,7 +33,7 @@ export default function page() {
   <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Join Online Class</button>
 </form>}
 
- {room===true && <OnlineClass roomId={classSection}/>}
+ {room===true && <OnlineClass meetingNumber={classSection} userName={emailId}/>}
     </div>
   )
 }

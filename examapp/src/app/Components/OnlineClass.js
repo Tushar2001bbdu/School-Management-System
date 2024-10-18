@@ -1,86 +1,89 @@
-import React, { useEffect, useRef, useState,useContext } from 'react';
-import {SocketContext} from "../Context/OnlineClassProvider"
-import io from 'socket.io-client';
-import Peer from 'peerjs';
+"use client"; // Ensure this component runs in the client-side environment
+
+import React, { useEffect, useContext, useState, useRef } from "react";
+import { ZoomMtg } from "@zoomus/websdk";
+import { OnlineClassContext } from "../Context/OnlineClassProvider";
 
 const OnlineClass = (props) => {
-  const [peerId, setPeerId] = useState('');
-  const [roomId] = useState('room1'); // Static room ID for now, can be dynamic
-  const [stream, setStream] = useState(null);
-  const videoRef = useRef();
-  const remoteVideoRef = useRef();
-  const socket=useContext(SocketContext);
-  const peerRef = useRef();
+  const context = useContext(OnlineClassContext);
+  const leaveUrl = "http://localhost:3000/Details/OnlineClass";
+  const role = 1;
+  const { meetingNumber, userName, passWord = "" } = props;
+  const containerRef = useRef(null);
+  const leaveMeetingRef = useRef(null);
+  const [isMeetingReady, setIsMeetingReady] = useState(false);
 
- 
-
-  useEffect(() => {
-   
-    // 2. Initialize PeerJS connection
-    peerRef.current = new Peer(undefined, {
-      host: 'localhost',
-      port: '3002',
-      path: '/peerjs',
-    });
-
-    
-    peerRef.current.on('open', (id) => {
-      setPeerId(id);  
-      
-      socket.emit('join-room', props.roomId, id);
-    });
-
-    // 4. Get user media (webcam) and display it locally
-    navigator.mediaDevices.getUserMedia({
-      video: true,
-      audio: true,
-    }).then((mediaStream) => {
-      setStream(mediaStream);  // Set stream to state
-      videoRef.current.srcObject = mediaStream;  // Display own video
-    });
-
-    // 5. Handle incoming calls
-    peerRef.current.on('call', (call) => {
-      call.answer(stream);  // Answer incoming call with local stream
-      call.on('stream', (remoteStream) => {
-        console.log('Remote user connected');  // Log message
-        remoteVideoRef.current.srcObject = remoteStream;  // Display remote video stream
-      });
-    });
-
-    // 6. Listen for 'user-connected' event and call the new user
-    socket.on('user-connected', (userId) => {
-      console.log(`User connected: ${userId}`);
-      callUser(userId);  // Call the newly connected user
-    });
-
-    // 7. Handle user disconnection
-    socket.on('user-disconnected', (userId) => {
-      console.log(`User disconnected: ${userId}`);
-    });
-
-   
-  }, [socket]);
-
-  // Function to call another user
-  const callUser = (userId) => {
-    const call = peerRef.current.call(userId, stream);
-    call.on('stream', (remoteStream) => {
-      remoteVideoRef.current.srcObject = remoteStream;  // Display remote video stream
+  const leaveMeeting = () => {
+    ZoomMtg.leaveMeeting({
+      success: (res) => {
+        console.log("Leave meeting success:", res);
+      },
+      error: (err) => {
+        console.error("Leave meeting error:", err);
+      },
     });
   };
 
+  const startMeeting = () => {
+    if (!context.signature || !context.signature.signature) {
+      console.error("Signature not available, cannot start the meeting.");
+      return;
+    }
+
+    const zoomContainer = document.getElementById("zmmtg-root");
+    if (!zoomContainer) {
+      console.error("Zoom container not found.");
+      return;
+    }
+
+    ZoomMtg.init({
+      leaveUrl: leaveUrl,
+      success: () => {
+        ZoomMtg.join({
+          meetingNumber: meetingNumber,
+          userName: userName,
+          signature: context.signature.signature,
+          apiKey: "7SYv3wWJQoOU5jbwXbGyQ",
+          targetElement: zoomContainer,
+          success: (res) => {
+            console.log("Join meeting success:", res);
+            setIsMeetingReady(true);
+          },
+          error: (err) => {
+            console.error("Join meeting error:", err);
+          },
+        });
+      },
+      error: (err) => {
+        console.error("Zoom init error:", err);
+      },
+    });
+  };
+
+  useEffect(() => {
+    const setupZoomSDK = async () => {
+      if (context.signature === null) {
+        await context.generateSignature(meetingNumber, role);
+      }
+
+      if (context.signature && context.signature.signature) {
+        ZoomMtg.setZoomJSLib("https://source.zoom.us/2.18.2/lib", "/av");
+        ZoomMtg.preLoadWasm();
+        ZoomMtg.prepareJssdk();
+        setIsMeetingReady(true);
+        startMeeting();
+      }
+    };
+
+    setupZoomSDK();
+  }, [meetingNumber, role, context.signature, containerRef]);
+  s;
+
   return (
     <div>
-      <h1>Peer.js + Socket.IO Video Chat</h1>
-      <div>
-        <h2>Your Video</h2>
-        <video ref={videoRef} autoPlay playsInline muted />
-      </div>
-      <div>
-        <h2>Remote Video</h2>
-        <video ref={remoteVideoRef} autoPlay playsInline />
-      </div>
+      <div id="zmmtg-root" ref={containerRef}></div>
+
+      <button id="leave">Leave Meeting</button>
     </div>
   );
 };

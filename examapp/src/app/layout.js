@@ -11,7 +11,7 @@ import Navbar from "./Components/Navbar";
 import { AdminProvider ,AdminContext} from "./Context/AdminProvider";
 import { FacultyProvider ,FacultyContext} from "./Context/FacultyProvider";
 import FacultySidebar from "./Components/FacultySideBar";
-import { SocketProvider } from "./Context/OnlineClassProvider";
+import { OnlineClassProvider } from "./Context/OnlineClassProvider";
 
 
 
@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
         <body className={inter.className}>
       
-        <SocketProvider>
+        <OnlineClassProvider>
         <AdminProvider>
          <FacultyProvider>
          <AuthProvider> 
@@ -58,7 +58,7 @@ export default function RootLayout({ children }) {
          </FacultyProvider>
         
         </AdminProvider>
-        </SocketProvider>
+        </OnlineClassProvider>
       
         
         </body>

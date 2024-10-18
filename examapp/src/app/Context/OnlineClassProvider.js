@@ -1,27 +1,45 @@
-import React, { createContext, useMemo, useEffect } from "react";
+import React, { createContext, useMemo, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-export const SocketContext = createContext(null);
+export const OnlineClassContext = createContext(null);
 
-export const SocketProvider = (props) => {
-  // Memoize the socket connection
+export const OnlineClassProvider = (props) => {
+  const [signature, setSignature] = useState(null);
+
   const socket = useMemo(() => {
     try {
       return io("http://localhost:3001", {
         transports: ["websocket"], // Ensure only WebSocket transport is used to avoid CORS issues
-        withCredentials: true,     // Send credentials (if needed, like cookies) with CORS requests
+        withCredentials: true, // Send credentials (if needed, like cookies) with CORS requests
       });
     } catch (error) {
       console.error("Socket connection error:", error);
-      return null; // Return null if there's an error
+      return null;
     }
-  }, []); // Empty array ensures socket is created only once when component mounts
-
- 
+  }, []);
+  const generateSignature = async (meetingNumber, role) => {
+    try {
+      let response = await fetch("http://localhost:3001/app/onlineClass/generateSignature", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          meetingNumber: meetingNumber,
+          role: role,
+        }),
+      });
+      response = await response.json();
+      console.log(response)
+      setSignature(response);
+    } catch (error) {
+      console.error("Error generating signature:", error);
+    }
+  };
 
   return (
-    <SocketContext.Provider value={socket}>
+    <OnlineClassContext.Provider value={{ socket, generateSignature, signature }}>
       {props.children}
-    </SocketContext.Provider>
+    </OnlineClassContext.Provider>
   );
 };

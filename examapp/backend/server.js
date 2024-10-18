@@ -11,9 +11,9 @@ const { ExpressPeerServer } = require('peer');
 const app = express();
 connectToMongo();
 
-// Middleware
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your frontend URL
+  origin: 'http://localhost:3000', 
   methods: ['GET', 'POST'],
   credentials: true,
 }));
@@ -21,34 +21,35 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// Define your routes
+
 app.use("/app/users", require("./routes/students"));
 app.use("/app/details", require("./routes/management"));
 app.use("/app/teachers", require("./routes/teachers"));
 app.use("/app/attendance", require("./routes/attendance"));
+app.use("/app/onlineClass", require("./routes/onlineclass"));
 
-// Create HTTP server for the main application
+
 const server = http.createServer(app);
 
-// Create a separate HTTP server for PeerJS
-const peerPort = 3002; // Use a different port for PeerJS
+
+const peerPort = 3002; 
 const peerServerInstance = http.createServer();
 const peerServer = ExpressPeerServer(peerServerInstance, { debug: true, path: '/peerjs' });
 
-// Use PeerJS middleware on Express
+
 app.use('/peerjs', peerServer);
 
-// Initialize HTTP and WebSocket servers
+
 initializeHttpServer(app);
 initializeWebSocket(server);
 
-// Start the main server
+
 const port = process.env.PORT || 3001;
 server.listen(port, () => {
   console.log(`Student Management System Server listening on port ${port}`);
 });
 
-// Start the PeerJS server
+
 peerServerInstance.listen(peerPort, () => {
   console.log(`PeerJS Server listening on port ${peerPort}`);
 });

@@ -15,13 +15,13 @@ function initializeWebSocket(server) {
   io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
     
-    socket.on('join-room', (roomId, userId) => {
-      console.log(`User ${userId} joined room ${roomId}`);
+    socket.on('join-room', (data) => {
+      console.log(`User ${data.peerId} joined room ${data.roomId}`);
       
-      socket.join(roomId);
+      socket.join(data.roomId);
 
       // Notify others in the room that a new user has connected
-      socket.to(roomId).emit('user-connected', userId);
+      socket.broadcast.to(data.roomId).emit('user-connected', data.peerId);
 
       // Handle user disconnection
       socket.on('disconnect', () => {
