@@ -1,4 +1,4 @@
-"use client"; // Ensure this component runs in the client-side environment
+"use client"; 
 
 import React, { useEffect, useContext, useState, useRef } from "react";
 import { ZoomMtg } from "@zoomus/websdk";
@@ -10,7 +10,6 @@ const OnlineClass = (props) => {
   const role = 1;
   const { meetingNumber, userName, passWord = "" } = props;
   const containerRef = useRef(null);
-  const leaveMeetingRef = useRef(null);
   const [isMeetingReady, setIsMeetingReady] = useState(false);
 
   const leaveMeeting = () => {
@@ -30,7 +29,7 @@ const OnlineClass = (props) => {
       return;
     }
 
-    const zoomContainer = document.getElementById("zmmtg-root");
+    const zoomContainer = containerRef.current;
     if (!zoomContainer) {
       console.error("Zoom container not found.");
       return;
@@ -45,6 +44,10 @@ const OnlineClass = (props) => {
           signature: context.signature.signature,
           apiKey: "7SYv3wWJQoOU5jbwXbGyQ",
           targetElement: zoomContainer,
+          permissions: {
+            audio: true,
+            video: true,
+          },
           success: (res) => {
             console.log("Join meeting success:", res);
             setIsMeetingReady(true);
@@ -61,29 +64,29 @@ const OnlineClass = (props) => {
   };
 
   useEffect(() => {
-    const setupZoomSDK = async () => {
-      if (context.signature === null) {
+    if (context.signature === null) {
+      async function getSign() {
         await context.generateSignature(meetingNumber, role);
       }
-
-      if (context.signature && context.signature.signature) {
-        ZoomMtg.setZoomJSLib("https://source.zoom.us/2.18.2/lib", "/av");
-        ZoomMtg.preLoadWasm();
-        ZoomMtg.prepareJssdk();
-        setIsMeetingReady(true);
-        startMeeting();
-      }
-    };
-
-    setupZoomSDK();
+      getSign();
+    } else {
+      const setupZoomSDK = async () => {
+        if (context.signature && context.signature.signature) {
+          ZoomMtg.setZoomJSLib("https://source.zoom.us/2.18.2/lib", "/av");
+          ZoomMtg.preLoadWasm();
+          ZoomMtg.prepareWebSDK();
+          setIsMeetingReady(true);
+          startMeeting(); // Start meeting once SDK is ready
+        }
+      };
+      setupZoomSDK();
+    }
   }, [meetingNumber, role, context.signature, containerRef]);
-  s;
 
   return (
     <div>
       <div id="zmmtg-root" ref={containerRef}></div>
-
-      <button id="leave">Leave Meeting</button>
+      <button id="leave" onClick={leaveMeeting}>Leave Meeting</button>
     </div>
   );
 };

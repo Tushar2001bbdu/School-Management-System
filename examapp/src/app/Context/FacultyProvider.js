@@ -1,7 +1,7 @@
 "use client";
 // context/AuthProvider.js
 import { createContext, useState, useContext } from "react";
-import { RoleProvider } from "./AdminProvider";
+import { RoleContext } from './RoleProvider';
 import Cookies from "js-cookie";
 // Create AuthContext
 export const FacultyContext = createContext();
@@ -9,8 +9,9 @@ export const FacultyContext = createContext();
 // Create AuthProvider to wrap your app
 export function FacultyProvider({ children }) {
   const [facultyData, setFacultyData] = useState(null);
-  const [listOfStudents, setListOfStudents] = useState(null);
-  const [studentProfile, setStudentProfile] = useState(null);
+  const [listOfStudents] = useState(null);
+  const [studentProfile] = useState(null);
+  const Role=useContext(RoleContext)
   
   async function facultyLogin(facultyDetails) {
     let url = "http://localhost:3001/app/teachers/login";
@@ -29,6 +30,7 @@ export function FacultyProvider({ children }) {
     console.log("rollno" + facultyDetails.rollNo);
     Cookies.set("rollno", facultyDetails.rollNo, { expires: 1 }); // Set the cookie with 7-day expiry
     response = await response.json();
+    Role.changeRole(response.role)
 
     
   }
