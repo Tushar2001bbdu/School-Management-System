@@ -7,11 +7,10 @@ import {
   Legend,
 } from 'chart.js';
 
-// Register the required components from Chart.js
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-const DoughnutChart = () => {
-  // Sample data for the doughnut chart
+const Chart = () => {
+  
   
   const data = {
     labels: ['present', 'absent'],
@@ -48,7 +47,7 @@ const DoughnutChart = () => {
     },
   };
 
-  return <Doughnut data={data} options={options} style={{"height":"140px","width":"140px"}} />;
+  return <Chart data={data} options={options} style={{"height":"140px","width":"140px"}} />;
 };
 
 export default DoughnutChart;

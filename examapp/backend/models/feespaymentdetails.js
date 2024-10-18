@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 const DetailsSchema = new Schema({
     
     rollno:{
-        type:Number,
+        type:String,
         required:true,
         unique:true
     },
