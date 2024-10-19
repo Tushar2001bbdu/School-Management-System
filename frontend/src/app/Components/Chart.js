@@ -50,4 +50,4 @@ const Chart = () => {
   return <Chart data={data} options={options} style={{"height":"140px","width":"140px"}} />;
 };
 
-export default DoughnutChart;
+export default Chart;

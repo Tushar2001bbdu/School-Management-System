@@ -2,7 +2,7 @@
 import React,{useEffect,useContext,useState} from 'react'
 import { AuthContext } from '../Context/AuthProvider'
 
-export default function Student_Personal_Data() 
+export default function StudentDetails() 
 {
   const  con =useContext(AuthContext)
 useEffect(()=>{

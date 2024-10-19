@@ -27,12 +27,16 @@ export function FacultyProvider({ children }) {
       }),
       // For POST, PUT, PATCH requests where you are sending a body
     });
+    localStorage.setItem('user','teacher')
     console.log("rollno" + facultyDetails.rollNo);
     Cookies.set("rollno", facultyDetails.rollNo, { expires: 1 }); // Set the cookie with 7-day expiry
     response = await response.json();
-    Role.changeRole(response.role)
-
-    
+    console.log(response);
+    if(response.status==200){
+      Role.changeRole("teacher")
+    }
+    localStorage.setItem('user','teacher')
+    console.log("role changed to " + Role.role)
   }
   async function getFacultyProfile() {
     let rollno = Cookies.get("rollno");

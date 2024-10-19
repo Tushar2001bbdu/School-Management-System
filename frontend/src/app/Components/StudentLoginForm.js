@@ -5,14 +5,13 @@ import { AuthContext } from "../Context/AuthProvider";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from "../utils/student_auth";
 import {useRouter} from "next/navigation"
-export default function FacultyLogin() {
+export default function student_login_form() {
   const [userDetails, setUserDetails] = useState({
     email: "",
     rollNo: "",
     password: "",
   });
   const User_Context = useContext(AuthContext);
-  const router=useRouter()
   console.log(User_Context);
   async function handleChange(e) {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
@@ -25,19 +24,15 @@ export default function FacultyLogin() {
         userDetails.email,
         userDetails.password
       );
-      const token = await userCredential.user.getIdToken(); // Get Firebase ID token
-
-      // You can now send the token to your API or store it in cookies for authentication
-      // Example: save token to localStorage (or better, use cookies)
+      const token = await userCredential.user.getIdToken(); 
       localStorage.setItem("firebaseToken", token);
       await User_Context.StudentLogin(userDetails);
       try{
-       await router.push("/Details")
-      }
-      catch(error){
-        console.log(error)
-      }
-     
+        await router.push("/Details")
+       }
+       catch(error){
+         console.log(error)
+       }
     } catch (error) {
       console.log(error);
     }
@@ -48,7 +43,7 @@ export default function FacultyLogin() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
             alt="Your Company"
-            src="/professor.png"
+            src="/graduated.png"
             height={"64"}
             width={"64"}
             className="mx-auto h-20 w-auto"

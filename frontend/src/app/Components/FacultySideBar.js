@@ -3,8 +3,9 @@
 
 import Link from 'next/link';
 
-export default function FacultySidebar({ children }) {
-
+import { useRouter } from 'next/navigation'
+export default function FacultySidebar() {
+  const Router=useRouter()
   return (
     <>
       
@@ -38,7 +39,7 @@ export default function FacultySidebar({ children }) {
             clip-rule="evenodd"></path>
         </svg>
       </div>
-      <Link href="Details/Personal_Details">Personal_Details</Link>
+      <a onClick={()=>{Router.push("Details/Personal_Details")}}>Personal_Details</a>
     </div>
     
     
@@ -52,7 +53,7 @@ export default function FacultySidebar({ children }) {
             clip-rule="evenodd"></path>
         </svg>
       </div>
-      <Link href="Details/Student_List">Student List</Link>
+      <a onClick={()=>{Router.push("Details/Student_List")}}>Student List</a>
       <div class="grid ml-auto place-items-center justify-self-end">
         <div
           class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
@@ -70,7 +71,7 @@ export default function FacultySidebar({ children }) {
             clip-rule="evenodd"></path>
         </svg>
       </div>
-      <Link href="Details/OnlineClasses">Start Online Class</Link>
+      <Link href="/OnlineClasses">Start Online Class</Link>
     </div>
     <div role="button"
       class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900">

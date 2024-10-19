@@ -8,7 +8,7 @@ export function RoleProvider({ children }) {
   const [role, setRole] = useState(null);
 
   const changeRole = (newRole) => {
-    setRole(newRole);
+    setRole("teacher");
   };
 
   return (
