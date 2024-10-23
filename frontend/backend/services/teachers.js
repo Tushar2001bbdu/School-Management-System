@@ -19,6 +19,7 @@ class TeacherService {
 
       return profile;
     } catch (error) {
+
       throw error;
     }
   }
@@ -61,12 +62,15 @@ class TeacherService {
       });
       return response;
     } catch (error) {
+      console.log(error)
       throw error;
     }
   }
   static async getStudentList(section) {
     try {
+      console.log("the section is" + section);
       let student = await students.find({ section: section });
+      console.log(student)
       return student;
     } catch (error) {
       throw error;

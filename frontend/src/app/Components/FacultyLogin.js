@@ -1,10 +1,10 @@
 "use client";
 import React, { useContext, useState } from "react";
 import Image from "next/image";
-import { AuthContext } from "../Context/AuthProvider";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { Auth } from "../utils/student_auth";
+import { Auth } from "../utils/teacher_auth";
 import { useRouter } from "next/navigation";
+import { FacultyContext } from "../Context/FacultyProvider";
 export default function FacultyLogin() {
   const [userDetails, setUserDetails] = useState({
     email: "",
@@ -26,8 +26,8 @@ export default function FacultyLogin() {
         userDetails.password
       );
       const token = await userCredential.user.getIdToken();
-      localStorage.setItem("firebaseToken", token);
-      await User_Context.StudentLogin(userDetails);
+      localStorage.setItem("teacherFirebaseToken", token);
+      await FacultyContext.facultyLogin(userDetails);
       try {
        router.push("/Details");
       } catch (error) {

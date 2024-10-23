@@ -1,7 +1,9 @@
 let teacherService = require("../services/teachers");
 exports.seeProfile = async (req, res) => {
   try {
+
     let rollno = req.query.rollno;
+    console.log("the roll number is " + rollno);
     const response = await teacherService.seeDetails(rollno);
     if (!response) {
       res.json({ status: 401, message: "you are not authorized" });
@@ -9,6 +11,7 @@ exports.seeProfile = async (req, res) => {
       res.json({ status: 200, message: response });
     }
   } catch (error) {
+    console.log(error)
     res.json({ status: 500, message: error });
   }
 };
@@ -64,19 +67,17 @@ exports.updateStudentResult = async (req, res) => {
 exports.getStudentsList = async (req, res) => {
   try {
     let section = req.query.section;
+    console.log("The section is " + section);
 
     if (!section) {
-      res.json({ status: 400, message: error });
+      res.status(400).json({ status: 400, message: "Section is required" });
     } else {
       let response = await teacherService.getStudentList(section);
-
-      if (!response) {
-        res.json({ status: 401, message: error });
-      } else {
-        res.json({ status: 200, studentList: response });
-      }
+      console.log("The student list is",response)
+      res.send( { status: 200, studentList: response });
     }
   } catch (error) {
-    res.json({ status: 500, message: error });
+    console.log(error);
+    res.status(500).json({ status: 500, message: error.message });
   }
 };

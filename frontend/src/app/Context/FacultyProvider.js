@@ -1,104 +1,102 @@
 "use client";
-// context/AuthProvider.js
+
 import { createContext, useState, useContext } from "react";
-import { RoleContext } from './RoleProvider';
+import { RoleContext } from "./RoleProvider";
 import Cookies from "js-cookie";
-// Create AuthContext
+
 export const FacultyContext = createContext();
 
-// Create AuthProvider to wrap your app
 export function FacultyProvider({ children }) {
   const [facultyData, setFacultyData] = useState(null);
   const [listOfStudents] = useState(null);
   const [studentProfile] = useState(null);
-  const Role=useContext(RoleContext)
-  
+  const Role = useContext(RoleContext);
+
   async function facultyLogin(facultyDetails) {
-    let url = "http://localhost:3001/app/teachers/login";
+    let url = new URL("http://localhost:3001/app/teachers/login");
+    url.searchParams.set("rollno", facultyDetails.rollno);
     let response = await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json", // If sending JSON data
+        "Content-Type": "application/json",
         authorization: localStorage.getItem("teacherFirebaseToken"),
       },
       body: JSON.stringify({
         email: facultyDetails.email,
         password: facultyDetails.password,
       }),
-      // For POST, PUT, PATCH requests where you are sending a body
     });
-    localStorage.setItem('user','teacher')
+    localStorage.setItem("user", "teacher");
     console.log("rollno" + facultyDetails.rollNo);
-    Cookies.set("rollno", facultyDetails.rollNo, { expires: 1 }); // Set the cookie with 7-day expiry
+    Cookies.set("rollno", facultyDetails.rollNo, { expires: 1 });
     response = await response.json();
     console.log(response);
-    if(response.status==200){
-      Role.changeRole("teacher")
+    if (response.status == 200) {
+      Role.changeRole("teacher");
     }
-    localStorage.setItem('user','teacher')
-    console.log("role changed to " + Role.role)
+    localStorage.setItem("user", "teacher");
+    console.log("role changed to " + Role.role);
   }
   async function getFacultyProfile() {
-    let rollno = Cookies.get("rollno");
-    let url = `http://localhost:3001/app/teachers/seeDetails?rollno=${rollno}`;
+    let rollno = 121078897;
+    let url = new URL(`http://localhost:3001/app/teachers/seeDetails`);
+    
+  url.searchParams.set("rollno", rollno);
     let response = await fetch(url, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json", // If sending JSON data
-        authorization: localStorage.getItem("teacherFirebaseToken"),
+        "Content-Type": "application/json",
+        "authorization": localStorage.getItem("teacherFirebaseToken"),
       },
-
-      // For POST, PUT, PATCH requests where you are sending a body
+      
     });
 
     response = await response.json();
     setFacultyData(response.message);
   }
   async function getListOfStudents(section) {
-    let rollno = Cookies.get("rollno");
-    let url = `http://localhost:3001/app/teachers/listOfStudents?rollno=${rollno}&section=${section}`;
+    let url = new URL(`http://localhost:3001/app/teachers/listOfStudents`);
+    url.searchParams.set("section", section);
     let response = await fetch(url, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json", // If sending JSON data
-        authorization: localStorage.getItem("teacherFirebaseToken"),
-      },
-
-      // For POST, PUT, PATCH requests where you are sending a body
+        "Content-Type": "application/json",
+        "authorization": localStorage.getItem("teacherFirebaseToken"),
+      }
+     
     });
 
     response = await response.json();
     return response.studentList;
   }
   async function getStudentProfile(rollno) {
-    let url = `http://localhost:3001/app/teachers/getStudentProfile?rollno=${rollno}`;
+    let url = new URL(`http://localhost:3001/app/teachers/getStudentProfile`);
+    url.searchParams.set("rollno", rollno);
     let response = await fetch(url, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json", // If sending JSON data
-        authorization: localStorage.getItem("teacherFirebaseToken"),
-      },
-
-      // For POST, PUT, PATCH requests where you are sending a body
+        "Content-Type": "application/json",
+        "authorization": localStorage.getItem("teacherFirebaseToken"),
+      }
     });
 
     response = await response.json();
     return response.profile;
   }
   async function updateResult(rollno, marks) {
-    let url = `http://localhost:3001/app/teachers/updateResult?rollno=${rollno}`;
+    let url = new URL(`http://localhost:3001/app/teachers/updateResult`);
+    url.searchParams.set("rollno", rollno);
+    url.searchParams.set("marks", marks);
     await fetch(url, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json", // If sending JSON data
-        authorization: localStorage.getItem("teacherFirebaseToken"),
+        "Content-Type": "application/json",
+        "authorization": localStorage.getItem("teacherFirebaseToken"),
       },
       body: JSON.stringify({
-        rollno:rollno,
-        marks: marks
-      }),
-
-      // For POST, PUT, PATCH requests where you are sending a body
+        rollno: rollno,
+        marks: marks,
+      })
     });
   }
 
