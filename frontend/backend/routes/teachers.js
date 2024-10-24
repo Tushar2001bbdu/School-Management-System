@@ -75,5 +75,12 @@ Router.put(
     }
   }
 );
-
+// Route to allow teacher to update marks of his/her students using his university roll no
+Router.patch(
+  "/updateResult",
+  authenticateTeacherToken,
+  teacherController.updateStudentResult
+);
+//Route to allow teacher to logout
+Router.post("/logout", authenticateTeacherToken, teacherController.logout);
 module.exports = Router;

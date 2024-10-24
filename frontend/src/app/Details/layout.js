@@ -6,20 +6,18 @@ import StudentSidebar from "../Components/StudentSidebar";
 import FacultySidebar from "../Components/FacultySideBar";
 const inter = Inter({ subsets: ["latin"] });
 const Layout = ({ children }) => {
-  const {role} = useContext(RoleContext);
-  
+  const { role } = useContext(RoleContext);
+
   return (
-    
-     
-        <div className=" grid grid-cols-12">
-        <div className="col-span-4">
-         
-          {<FacultySidebar/>}
-        </div>
-        <div className="col-span-8"><main>{children}</main></div>
+    <div className=" grid grid-cols-12">
+      <div className="col-span-4">
+        {role === "student" && <StudentSidebar />}
+        {role === "teacher" && <FacultySidebar />}
       </div>
-         
-    
+      <div className="col-span-8">
+        <main>{children}</main>
+      </div>
+    </div>
   );
 };
 

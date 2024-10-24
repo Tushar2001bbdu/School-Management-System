@@ -7,10 +7,8 @@ export default function page() {
 const context=useContext(FacultyContext)
 const[visbility,setVisbilty]=useState("hidden")
 const[section,setSection]=useState(null)
-const [studentlist,setStudentList]=useState(null)
 async function getListOfStudent(text){
-let response=await context.getListOfStudents(text);
-setStudentList(response)
+await context.getListOfStudents(text);
 }
 useEffect(()=>{
     setVisbilty('hidden')
@@ -69,7 +67,7 @@ useEffect(()=>{
 
                  </thead>
                  <tbody>
-                 {studentlist!==null && studentlist.map((element,index)=>{
+                 {context.studentList!==null && context.studentList.map((element,index)=>{
                   return (<StudentProfile key={index} profile={element}/>)
                  })}
                     

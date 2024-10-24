@@ -3,18 +3,19 @@
 import { createContext, useState, useContext } from "react";
 import { RoleContext } from "./RoleProvider";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 
 export const FacultyContext = createContext();
 
 export function FacultyProvider({ children }) {
   const [facultyData, setFacultyData] = useState(null);
-  const [listOfStudents] = useState(null);
+  const [studentList, setList] = useState(null);
   const [studentProfile] = useState(null);
   const Role = useContext(RoleContext);
-
+  const router = useRouter();
   async function facultyLogin(facultyDetails) {
     let url = new URL("http://localhost:3001/app/teachers/login");
-    url.searchParams.set("rollno", facultyDetails.rollno);
+    url.searchParams.set("rollno", facultyDetails.rollNo);
     let response = await fetch(url, {
       method: "POST",
       headers: {
@@ -40,15 +41,14 @@ export function FacultyProvider({ children }) {
   async function getFacultyProfile() {
     let rollno = 121078897;
     let url = new URL(`http://localhost:3001/app/teachers/seeDetails`);
-    
-  url.searchParams.set("rollno", rollno);
+
+    url.searchParams.set("rollno", rollno);
     let response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "authorization": localStorage.getItem("teacherFirebaseToken"),
+        authorization: localStorage.getItem("teacherFirebaseToken"),
       },
-      
     });
 
     response = await response.json();
@@ -61,13 +61,11 @@ export function FacultyProvider({ children }) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "authorization": localStorage.getItem("teacherFirebaseToken"),
-      }
-     
+        authorization: localStorage.getItem("teacherFirebaseToken"),
+      },
     });
-
-    response = await response.json();
-    return response.studentList;
+    console.log("The RESPONSE is: " + response);
+    setList(response.studentList);
   }
   async function getStudentProfile(rollno) {
     let url = new URL(`http://localhost:3001/app/teachers/getStudentProfile`);
@@ -76,8 +74,8 @@ export function FacultyProvider({ children }) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "authorization": localStorage.getItem("teacherFirebaseToken"),
-      }
+        authorization: localStorage.getItem("teacherFirebaseToken"),
+      },
     });
 
     response = await response.json();
@@ -91,13 +89,18 @@ export function FacultyProvider({ children }) {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
-        "authorization": localStorage.getItem("teacherFirebaseToken"),
+        authorization: localStorage.getItem("teacherFirebaseToken"),
       },
       body: JSON.stringify({
         rollno: rollno,
         marks: marks,
-      })
+      }),
     });
+  }
+  async function logout() {
+    localStorage.removeItem("teacherFirebaseToken");
+    Role.changeRole("guest");
+    router.push("/Faculty_Services");
   }
 
   return (
@@ -107,10 +110,11 @@ export function FacultyProvider({ children }) {
         facultyLogin,
         getFacultyProfile,
         getListOfStudents,
-        listOfStudents,
+        studentList,
         studentProfile,
         getStudentProfile,
         updateResult,
+        logout,
       }}
     >
       {children}

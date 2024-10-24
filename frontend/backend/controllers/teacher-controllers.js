@@ -1,7 +1,6 @@
 let teacherService = require("../services/teachers");
 exports.seeProfile = async (req, res) => {
   try {
-
     let rollno = req.query.rollno;
     console.log("the roll number is " + rollno);
     const response = await teacherService.seeDetails(rollno);
@@ -11,7 +10,7 @@ exports.seeProfile = async (req, res) => {
       res.json({ status: 200, message: response });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.json({ status: 500, message: error });
   }
 };
@@ -69,15 +68,24 @@ exports.getStudentsList = async (req, res) => {
     let section = req.query.section;
     console.log("The section is " + section);
 
-    if (!section) {
+    if (section === undefined) {
       res.status(400).json({ status: 400, message: "Section is required" });
     } else {
       let response = await teacherService.getStudentList(section);
-      console.log("The student list is",response)
-      res.send( { status: 200, studentList: response });
+      console.log("The student list is", response);
+      res.status(200).send({ status: 200, studentList: response });
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ status: 500, message: error.message });
+  }
+};
+exports.logout = async (req, res) => {
+  let { accessToken } = req.body;
+  try {
+    let response = await teacherService.logout(accessToken);
+    res.status(200).send({ status: 200, message: response });
+  } catch (error) {
     res.status(500).json({ status: 500, message: error.message });
   }
 };

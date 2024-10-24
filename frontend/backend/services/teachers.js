@@ -1,7 +1,8 @@
 const students = require("../models/students");
 const Teachers = require("../models/teachers");
 const studentresult = require("../models/examresult");
-
+const admin = require("firebase-admin");
+const appteachers = admin.app("teachers");
 class TeacherService {
   static async seeDetails(rollno) {
     try {
@@ -19,7 +20,6 @@ class TeacherService {
 
       return profile;
     } catch (error) {
-
       throw error;
     }
   }
@@ -62,7 +62,7 @@ class TeacherService {
       });
       return response;
     } catch (error) {
-      console.log(error)
+      console.log(error);
       throw error;
     }
   }
@@ -70,11 +70,23 @@ class TeacherService {
     try {
       console.log("the section is" + section);
       let student = await students.find({ section: section });
-      console.log(student)
+      console.log(student);
       return student;
     } catch (error) {
       throw error;
     }
   }
+  static async logout(accessToken) {
+    let message;
+    admin
+      .auth(appteachers)
+      .revokeIdToken(accessToken)
+      .then(message = "Token revoked successfully")
+      .catch((error) => {
+        message = error;
+      });
+    return message;
+  }
 }
+
 module.exports = TeacherService;

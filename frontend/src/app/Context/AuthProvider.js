@@ -9,7 +9,8 @@ export function AuthProvider({ children }) {
   let userRole = "student";
   const Role = useContext(RoleContext);
   const [studentResult, setStudentResult] = useState(null);
-  const [studentFeesPaymentDetails, setStudentFeesPaymentDetails] = useState(null);
+  const [studentFeesPaymentDetails, setStudentFeesPaymentDetails] =
+    useState(null);
   async function StudentDetails() {
     let rollno = 1210437010;
     let url = new URL(`http://localhost:3001/app/users/seeDetails`);
@@ -19,8 +20,7 @@ export function AuthProvider({ children }) {
       headers: {
         "Content-Type": "application/json",
         authorization: localStorage.getItem("firebaseToken"),
-      }
-      
+      },
     });
     response = await response.json();
     setStudentData(response.message);
@@ -58,7 +58,6 @@ export function AuthProvider({ children }) {
         "Content-Type": "application/json",
         authorization: localStorage.getItem("firebaseToken"),
       },
-      
     });
     response = await response.json();
     setStudentResult(response.message);
@@ -73,7 +72,6 @@ export function AuthProvider({ children }) {
         "Content-Type": "application/json",
         authorization: localStorage.getItem("firebaseToken"),
       },
-      
     });
     response = await response.json();
     setStudentFeesPaymentDetails(response.message);
@@ -88,11 +86,15 @@ export function AuthProvider({ children }) {
       headers: {
         "Content-Type": "application/json",
         authorization: localStorage.getItem("firebaseToken"),
-      }
-      
+      },
     });
     response = await response.json();
     setStudentResult(response.message);
+  }
+  async function logout() {
+    localStorage.removeItem("teacherFirebaseToken");
+    Role.changeRole("guest");
+    router.push("/Faculty_Services");
   }
   return (
     <AuthContext.Provider
@@ -105,6 +107,7 @@ export function AuthProvider({ children }) {
         getStudentDetails,
         studentFeesPaymentDetails,
         getStudentResult,
+        logout,
       }}
     >
       {children}
