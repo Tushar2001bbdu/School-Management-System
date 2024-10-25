@@ -1,7 +1,7 @@
 let teacherService = require("../services/teachers");
+let rollno;
 exports.seeProfile = async (req, res) => {
   try {
-    let rollno = req.query.rollno;
     console.log("the roll number is " + rollno);
     const response = await teacherService.seeDetails(rollno);
     if (!response) {
@@ -15,6 +15,8 @@ exports.seeProfile = async (req, res) => {
   }
 };
 exports.login = async (req, res) => {
+  rollno = req.body.rollno;
+  console.log("The roll number is " +rollno)
   try {
     res.json({
       status: 200,
@@ -26,7 +28,6 @@ exports.login = async (req, res) => {
 };
 exports.getStudentProfile = async (req, res) => {
   try {
-    let rollno = req.query.rollno;
     if (!rollno) {
       res.json({ status: 400, message: "no roll number has been entered" });
     } else {
@@ -42,7 +43,7 @@ exports.getStudentProfile = async (req, res) => {
   }
 };
 exports.updateStudentResult = async (req, res) => {
-  const { marks, rollno } = req.body;
+  const { marks } = req.body;
   try {
     if (!marks || !rollno) {
       res.json({

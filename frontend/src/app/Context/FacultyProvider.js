@@ -35,6 +35,11 @@ export function FacultyProvider({ children }) {
     if (response.status == 200) {
       Role.changeRole("teacher");
     }
+    else{
+      
+        alert("invalid credentials entered,please try again")
+
+    }
     localStorage.setItem("user", "teacher");
     console.log("role changed to " + Role.role);
   }

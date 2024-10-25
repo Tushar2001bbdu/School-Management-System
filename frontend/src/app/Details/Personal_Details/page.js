@@ -1,15 +1,15 @@
 "use client";
 import React, { useContext } from "react";
-import Student_Personal_Data from "../../Components/StudentDetails";
 
-import { AuthContext } from "@/app/Context/AuthProvider";
 import FacultyProfile from "@/app/Components/FacultyProfile";
 import StudentDetails from "../../Components/StudentDetails";
+import { RoleContext } from "@/app/Context/RoleProvider";
 export default function page() {
-  
+  const Role = useContext(RoleContext);
   return (
     <>
-      <FacultyProfile />
+      {Role.role === "student" && <StudentDetails />}
+      {Role.role === "teacher" && <FacultyProfile />}
     </>
   );
 }

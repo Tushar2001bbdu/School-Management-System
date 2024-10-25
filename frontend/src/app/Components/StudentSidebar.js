@@ -55,7 +55,7 @@ export default function StudentSideBar() {
                 ></path>
               </svg>
             </div>
-            <Link href="Details/Personal_Details">Personal_Details</Link>
+            <Link href={"Details/Personal_Details"}>Personal_Details</Link>
           </div>
 
           <div

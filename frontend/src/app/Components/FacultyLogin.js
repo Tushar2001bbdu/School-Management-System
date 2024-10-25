@@ -5,12 +5,15 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from "../utils/teacher_auth";
 import { useRouter } from "next/navigation";
 import { FacultyContext } from "../Context/FacultyProvider";
+import Alert from "./Alert";
 export default function FacultyLogin() {
+  alert("hello guys")
   const [userDetails, setUserDetails] = useState({
     email: "",
     rollNo: "",
     password: "",
   });
+  const [error, setError] = useState(null);
   const User_Context = useContext(AuthContext);
   const router = useRouter();
   console.log(User_Context);
@@ -18,6 +21,7 @@ export default function FacultyLogin() {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   }
   async function handleSubmit(e) {
+    alert("You have entered invalid credentials. Please try again")
     e.preventDefault();
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -25,20 +29,29 @@ export default function FacultyLogin() {
         userDetails.email,
         userDetails.password
       );
-      const token = await userCredential.user.getIdToken();
-      localStorage.setItem("teacherFirebaseToken", token);
-      await FacultyContext.facultyLogin(userDetails);
-      try {
-       router.push("/Details");
-      } catch (error) {
-        console.log(error);
+      if(userCredential.error!==undefined){
+        setError(true)
+        return;
       }
+      else{
+        const token = await userCredential.user.getIdToken();
+        localStorage.setItem("teacherFirebaseToken", token);
+        await FacultyContext.facultyLogin(userDetails);
+        try {
+         router.push("/Details");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      
     } catch (error) {
+     setError(true)
       console.log(error);
     }
   }
   return (
     <div>
+
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <Image
@@ -48,6 +61,7 @@ export default function FacultyLogin() {
             width={"64"}
             className="mx-auto h-20 w-auto"
           />
+          {error===true && <Alert message="invalid credentials entered"/> }
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>

@@ -1,7 +1,8 @@
 let studentService = require("../services/students");
+let rollno=1210437010
 exports.seeProfile = async (req, res) => {
   try {
-    let rollno = req.query.rollno;
+    
     if (!rollno) {
       return res.json({ status: 400, message: "rollno is required" });
     }
@@ -18,6 +19,9 @@ exports.seeProfile = async (req, res) => {
 };
 exports.login = async (req, res) => {
   try {
+    
+    console.log("the roll number is :"+rollno);
+
     res.json({
       status: 200,
       message: "You have logged in successfully",
@@ -28,7 +32,7 @@ exports.login = async (req, res) => {
 };
 exports.getStudentResult = async (req, res) => {
   try {
-    let rollno = req.query.rollno;
+   
     if (!rollno) {
       return res.json({ status: 400, message: "rollno is required" });
     }
@@ -47,7 +51,7 @@ exports.getStudentResult = async (req, res) => {
 
 exports.getStudentFeesDetails = async (req, res) => {
   try {
-    let rollno = req.query.rollno;
+    
     if (!rollno) {
       return res.json({ status: 400, message: "rollno is required" });
     }

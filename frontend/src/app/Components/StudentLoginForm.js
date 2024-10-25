@@ -6,13 +6,13 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from "../utils/student_auth";
 import {useRouter} from "next/navigation"
 export default function student_login_form() {
+  const router=useRouter()
+  const[rollno,setRollno]=useState(null)
   const [userDetails, setUserDetails] = useState({
     email: "",
-    rollNo: "",
     password: "",
   });
   const User_Context = useContext(AuthContext);
-  console.log(User_Context);
   async function handleChange(e) {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   }
@@ -26,13 +26,9 @@ export default function student_login_form() {
       );
       const token = await userCredential.user.getIdToken(); 
       localStorage.setItem("firebaseToken", token);
-      await User_Context.StudentLogin(userDetails);
-      try{
-        await router.push("/Details")
-       }
-       catch(error){
-         console.log(error)
-       }
+      await User_Context.StudentLogin(userDetails,rollno);
+   
+       
     } catch (error) {
       console.log(error);
     }
@@ -71,14 +67,14 @@ export default function student_login_form() {
               <div className="mt-2">
                 <input
                   id="rollno"
-                  name="rollNo"
+                  name="rollno"
                   type="text"
-                  value={userDetails.rollNo}
+                  value={rollno}
                   onChange={(e) => {
-                    handleChange(e);
+                    setRollno(e.target.value);
                   }}
                   required
-                  autoComplete="email"
+                  autoComplete="rollno"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
