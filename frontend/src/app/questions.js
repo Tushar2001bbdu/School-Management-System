@@ -256,4 +256,5 @@ let questions=[
       "option 2": "Test efficiency"
     }
   ]
-  module.exports=questions
+export default questions;
+  
