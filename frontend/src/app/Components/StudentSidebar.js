@@ -55,7 +55,7 @@ export default function StudentSideBar() {
                 ></path>
               </svg>
             </div>
-            <Link href={"Details/Personal_Details"}>Personal_Details</Link>
+            <Link href={"Details/Personal_Details"} exact>Personal_Details</Link>
           </div>
 
           <div
@@ -77,7 +77,7 @@ export default function StudentSideBar() {
                 ></path>
               </svg>
             </div>
-            <Link href="Details/Student_Results">Exam Results</Link>
+            <Link href="Details/Student_Results" exact>Exam Results</Link>
             <div class="grid ml-auto place-items-center justify-self-end">
               <div class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
                 <span class=""></span>
@@ -103,7 +103,7 @@ export default function StudentSideBar() {
                 ></path>
               </svg>
             </div>
-            <Link href="Details/Fees_Payment_Details">
+            <Link href="Details/Fees_Payment_Details" exact>
               Fees Payment Details
             </Link>
           </div>
@@ -126,7 +126,7 @@ export default function StudentSideBar() {
                 ></path>
               </svg>
             </div>
-            Give Online Exam
+            <Link href="Details/Exam" exact>Give Online Exam</Link>
           </div>
           <div
             role="button"

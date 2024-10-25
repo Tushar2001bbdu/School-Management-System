@@ -30,7 +30,6 @@ export function AuthProvider({ children }) {
   }
   async function StudentLogin(userDetails,rollno) {
     let url = new URL("http://localhost:3001/app/users/login");
-    console.log("my rollno is " + rollno)
     let response = await fetch(url, {
       method: "POST",
       headers: {
