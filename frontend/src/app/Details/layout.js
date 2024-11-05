@@ -11,7 +11,9 @@ const Layout = ({ children }) => {
   return (
     <div className=" grid grid-cols-12">
       <div className="col-span-4">
-        <StudentSidebar />
+        {role==='student' && <StudentSidebar />}
+        {role==='teacher' && <FacultySidebar />}
+
         
       </div>
       <div className="col-span-8">

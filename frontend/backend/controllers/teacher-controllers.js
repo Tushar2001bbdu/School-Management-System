@@ -15,7 +15,7 @@ exports.seeProfile = async (req, res) => {
   }
 };
 exports.login = async (req, res) => {
-  rollno = req.body.rollno;
+  rollno = req.query.rollno;
   console.log("The roll number is " +rollno)
   try {
     res.json({
@@ -32,10 +32,10 @@ exports.getStudentProfile = async (req, res) => {
       res.json({ status: 400, message: "no roll number has been entered" });
     } else {
       const response = await teacherService.getStudentProfile(rollno);
-      if (!response) {
+      if (response===null) {
         res.json({ status: 401, message: "invalid rollno has been entered" });
       } else {
-        res.json({ status: 200, profile: profile });
+        res.json({ status: 200, profile: response });
       }
     }
   } catch (error) {

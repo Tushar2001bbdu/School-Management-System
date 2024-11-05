@@ -1,8 +1,7 @@
 let studentService = require("../services/students");
-let rollno=1210437010
+let rollno = 1210437010;
 exports.seeProfile = async (req, res) => {
   try {
-    
     if (!rollno) {
       return res.json({ status: 400, message: "rollno is required" });
     }
@@ -13,14 +12,13 @@ exports.seeProfile = async (req, res) => {
       res.json({ status: 200, message: response });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.json({ status: 500, message: error });
   }
 };
 exports.login = async (req, res) => {
   try {
-    
-    console.log("the roll number is :"+rollno);
+    console.log("the roll number is :" + req.body.rollno);
 
     res.json({
       status: 200,
@@ -32,7 +30,6 @@ exports.login = async (req, res) => {
 };
 exports.getStudentResult = async (req, res) => {
   try {
-   
     if (!rollno) {
       return res.json({ status: 400, message: "rollno is required" });
     }
@@ -51,17 +48,17 @@ exports.getStudentResult = async (req, res) => {
 
 exports.getStudentFeesDetails = async (req, res) => {
   try {
-    
     if (!rollno) {
       return res.json({ status: 400, message: "rollno is required" });
-    }
-
-    let response = await studentService.getStudentFeesDetails(rollno);
-
-    if (!response) {
-      return res.json({ status: 404, message: "No fees details found" });
     } else {
-      return res.json({ status: 200, message: response });
+      console.log("the roll number is" + rollno);
+      let response = await studentService.getStudentFeesDetails(rollno);
+
+      if (!response) {
+        return res.json({ status: 404, message: "No fees details found" });
+      } else {
+        return res.json({ status: 200, message: response });
+      }
     }
   } catch (error) {
     res.json({ status: 500, message: error });

@@ -7,8 +7,20 @@ export default function page() {
 const context=useContext(FacultyContext)
 const[visbility,setVisbilty]=useState("hidden")
 const[section,setSection]=useState(null)
-async function getListOfStudent(text){
-await context.getListOfStudents(text);
+const[studentList,setStudentList]=useState(null)
+async function getListOfStudent(section){
+    let url = new URL(`http://localhost:3001/app/teachers/listOfStudents`);
+    url.searchParams.set("section", section);
+    let response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: localStorage.getItem("teacherFirebaseToken"),
+      },
+    });
+    response=await response.json()
+    console.log("The RESPONSE is: " + response);
+    setStudentList(response.studentList);
 }
 useEffect(()=>{
     setVisbilty('hidden')
@@ -67,7 +79,7 @@ useEffect(()=>{
 
                  </thead>
                  <tbody>
-                 {context.studentList!==null && context.studentList.map((element,index)=>{
+                 {studentList!==null && studentList.map((element,index)=>{
                   return (<StudentProfile key={index} profile={element}/>)
                  })}
                     

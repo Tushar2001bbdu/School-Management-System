@@ -14,17 +14,19 @@ class StudentService {
   }
   static async getStudentResult(rollno) {
     try {
-      let result = await studentresult.findOne({ rollno: rollno });
+      let result = await studentresult.findOne({ "rollno": rollno });
       return result;
     } catch (error) {
       throw error;
     }
   }
-  static async getStudentFeesDetails(rollno) {
-    try {
-      let fees = await feesdetails.findOne({ rollno: rollno });
+
+  static async getStudentFeesDetails(rollno) {    try {
+      let fees = await feesdetails.findOne({ "rollno": 1210437010 });
+      console.log(fees)
       return fees;
     } catch (error) {
+      console.log(error)
       throw error;
     }
   }

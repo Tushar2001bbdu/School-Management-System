@@ -6,26 +6,17 @@ const appteachers = admin.app("teachers");
 class TeacherService {
   static async seeDetails(rollno) {
     try {
-      let teacher = await Teachers.findOne({ rollno: rollno });
+      let teacher = await Teachers.findOne({ "rollno":rollno });
 
-      let profile = {
-        name: teacher.name,
-        course: teacher.course,
-        age: teacher.age,
-        gender: teacher.gender,
-        rollno: teacher.rollno,
-        attendance: teacher.attendance,
-        email: teacher.email,
-      };
 
-      return profile;
-    } catch (error) {
+      return teacher;
+    } catch(error) {
       throw error;
     }
   }
   static async getStudentProfile(rollno) {
     try {
-      let profile = await students.findOne({ rollno: rollno });
+      let profile = await students.findOne({ "rollno": rollno });
       return profile;
     } catch (error) {
       throw error;
@@ -52,13 +43,13 @@ class TeacherService {
       } else {
         grade = "O";
       }
-      let response = await studentresult.findOne({ rollno: rollno });
+      let response = await studentresult.findOne({ "rollno": rollno });
       response = await studentresult.findOneAndUpdate(
-        { rollno: rollno },
-        { $set: { marks: marks, grade: grade } }
+        { "rollno": rollno },
+        { "$set": { "marks": marks, "grade": grade } }
       );
       response = await studentresult.findOne({
-        rollno: rollno,
+        "rollno": rollno,
       });
       return response;
     } catch (error) {
@@ -69,7 +60,7 @@ class TeacherService {
   static async getStudentList(section) {
     try {
       console.log("the section is" + section);
-      let student = await students.find({ section: section });
+      let student = await students.find({ "section": section });
       console.log(student);
       return student;
     } catch (error) {

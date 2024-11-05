@@ -28,23 +28,22 @@ export function FacultyProvider({ children }) {
       }),
     });
     localStorage.setItem("user", "teacher");
-    console.log("rollno" + facultyDetails.rollNo);
-    Cookies.set("rollno", facultyDetails.rollNo, { expires: 1 });
-    response = await response.json();
-    console.log(response);
     if (response.status == 200) {
       Role.changeRole("teacher");
-    }
-    else{
-      
-        alert("invalid credentials entered,please try again")
 
+      Cookies.set('rollno', facultyDetails.rollno, {
+        expires: 7,
+        path: '',
+
+        sameSite: 'Strict'
+      });
     }
+
     localStorage.setItem("user", "teacher");
-    console.log("role changed to " + Role.role);
+
   }
   async function getFacultyProfile() {
-    let rollno = 121078897;
+    let rollno = "221078897";
     let url = new URL(`http://localhost:3001/app/teachers/seeDetails`);
 
     url.searchParams.set("rollno", rollno);
@@ -104,7 +103,7 @@ export function FacultyProvider({ children }) {
   }
   async function logout() {
     localStorage.removeItem("teacherFirebaseToken");
-    Role.changeRole("guest");
+    Role.changeRole(null);
     router.push("/Faculty_Services");
   }
 

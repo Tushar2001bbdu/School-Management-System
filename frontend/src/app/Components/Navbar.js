@@ -1,32 +1,28 @@
-import React, { useState, useRef, useContext } from 'react';
-import SchoolIcon from '@mui/icons-material/School';
-import Webcam from 'react-webcam';
-import { AdminContext } from '../Context/AdminProvider';
+import React, { useState, useRef, useContext } from "react";
+import SchoolIcon from "@mui/icons-material/School";
+import Webcam from "react-webcam";
+import { AdminContext } from "../Context/AdminProvider";
+import { RoleContext } from "../Context/RoleProvider";
 
 export default function Navbar() {
   const [visibility, setVisibility] = useState(false);
   const webcamRef = useRef(null);
   const [imageSrc, setImageSrc] = useState(null);
   const context = useContext(AdminContext);
+  const Role = useContext(RoleContext);
 
   // Function to open the webcam
   function openWebcam() {
     setVisibility(true);
   }
 
-  // Convert Data URL to Blob
-  const dataURLToBlob = async(dataURL) => {
-  let response=await fetch(dataURL)
-  return response.blob()
-  };
 
-  // Capture image from webcam
-  const captureImage = async() => {
+  const captureImage = async () => {
     const image = webcamRef.current.getScreenshot();
     if (image) {
-  
       context.sendPhoto(image); // Send the blob to the context
     }
+    setVisibility(false)
   };
 
   return (
@@ -61,7 +57,11 @@ export default function Navbar() {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                  />
                 </svg>
                 <svg
                   className="hidden h-6 w-6"
@@ -71,40 +71,42 @@ export default function Navbar() {
                   stroke="currentColor"
                   aria-hidden="true"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             {/* Navbar content */}
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-              <div className="flex flex-shrink-0 items-center text-white">
-                
-              </div>
+              <div className="flex flex-shrink-0 items-center text-white"></div>
               <div className="hidden sm:ml-6 sm:block">
                 <div className="flex space-x-4">
-                  <a
-                    href="/Details"
-                    className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white"
-                    aria-current="page"
-                  >
-                    Dashboard
-                  </a>
+                 
+                  
                   <a
                     href="/Student_Services"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    hidden={Role.role!==null?true:false}
                   >
                     Student
                   </a>
+                  
+                 
                   <a
                     href="/Faculty_Services"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    hidden={Role.role!==null?true:false}
                   >
                     Faculty
                   </a>
                   <a
                     href="#"
                     className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    hidden={Role.role!==null?true:false}
                   >
                     Administrator
                   </a>
@@ -114,32 +116,39 @@ export default function Navbar() {
 
             {/* User menu */}
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              <button
+              {Role.role!==null && <button
                 type="button"
                 className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
                 onClick={openWebcam}
               >
                 <span className="absolute -inset-1.5"></span>
                 <span className="sr-only">Open user menu</span>
-                <SchoolIcon style={{ color: 'white' }} />
-              </button>
-              <button
-                type="button"
-                className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                onClick={captureImage}
-              >
-                <span className="absolute -inset-1.5"></span>
-                <span className="sr-only">Capture Image</span>
-                <SchoolIcon style={{ color: 'white' }} />
-              </button>
+                Open Webcam
+              </button> }
+              {Role.role !== null && (
+                <button
+                  type="button"
+                  className=" mx-3 relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                  onClick={captureImage}
+                >
+                  {}
+                  <span className="absolute -inset-1.5"></span>
+                  <span className="sr-only">Capture Image</span>
+                  Capture Attendance
+                </button>
+              )}
             </div>
           </div>
         </div>
       </nav>
       {/* Display captured image if exists */}
       {imageSrc && (
-        <div style={{ marginTop: '10px' }}>
-          <img src={imageSrc} alt="Captured" style={{ maxWidth: '100%', height: 'auto' }} />
+        <div style={{ marginTop: "10px" }}>
+          <img
+            src={imageSrc}
+            alt="Captured"
+            style={{ maxWidth: "100%", height: "auto" }}
+          />
         </div>
       )}
     </div>

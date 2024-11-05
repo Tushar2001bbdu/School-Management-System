@@ -1,21 +1,35 @@
-"use client";
+'use client';
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { AuthContext } from "../Context/AuthProvider";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from "../utils/student_auth";
-import {useRouter} from "next/navigation"
-export default function student_login_form() {
-  const router=useRouter()
-  const[rollno,setRollno]=useState(null)
+import { useRouter } from "next/navigation";
+
+export default function StudentLoginForm() {
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
+    rollno: ""
   });
+
   const User_Context = useContext(AuthContext);
-  async function handleChange(e) {
-    setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
+
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setUserDetails(prevDetails => {
+      const updatedDetails = { ...prevDetails, [name]: value };
+
+      // Save rollno to localStorage immediately if it's being updated
+      if (name === "rollno" && value) {
+        localStorage.setItem("rollno", value);
+        console.log("Roll number saved to localStorage:", value); // Debugging
+      }
+
+      return updatedDetails;
+    });
   }
+
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -24,15 +38,20 @@ export default function student_login_form() {
         userDetails.email,
         userDetails.password
       );
-      const token = await userCredential.user.getIdToken(); 
+
+      const token = await userCredential.user.getIdToken();
       localStorage.setItem("firebaseToken", token);
-      await User_Context.StudentLogin(userDetails,rollno);
-   
-       
+
+      // Store rollno in localStorage after successful login (backup in case)
+      localStorage.setItem("rollno", "1210437010");
+
+      // Call StudentLogin from AuthContext
+      await User_Context.StudentLogin({ ...userDetails });
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
     }
   }
+
   return (
     <div>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -52,9 +71,7 @@ export default function student_login_form() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             action="#"
-            onSubmit={(e) => {
-              handleSubmit(e);
-            }}
+            onSubmit={handleSubmit}
             className="space-y-6"
           >
             <div>
@@ -69,10 +86,8 @@ export default function student_login_form() {
                   id="rollno"
                   name="rollno"
                   type="text"
-                  value={rollno}
-                  onChange={(e) => {
-                    setRollno(e.target.value);
-                  }}
+                  value={userDetails.rollno}
+                  onChange={handleChange}
                   required
                   autoComplete="rollno"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -92,9 +107,7 @@ export default function student_login_form() {
                   name="email"
                   type="email"
                   value={userDetails.email}
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                   required
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -125,9 +138,7 @@ export default function student_login_form() {
                   name="password"
                   type="password"
                   value={userDetails.password}
-                  onChange={(e) => {
-                    handleChange(e);
-                  }}
+                  onChange={handleChange}
                   required
                   autoComplete="current-password"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

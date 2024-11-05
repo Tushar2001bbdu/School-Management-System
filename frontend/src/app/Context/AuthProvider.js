@@ -1,8 +1,8 @@
-"use client";
+'use client'
 import { createContext, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import { RoleContext } from "./RoleProvider";
-import {useRouter} from "next/navigation"
+import { useRouter } from "next/navigation"
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
@@ -13,11 +13,11 @@ export function AuthProvider({ children }) {
   const [studentResult, setStudentResult] = useState(null);
   const [studentFeesPaymentDetails, setStudentFeesPaymentDetails] =
     useState(null);
-  const [rollno, setRollno] = useState(null);
+
   async function StudentDetails() {
-    
+
     let url = new URL(`http://localhost:3001/app/users/seeDetails`);
-  
+
     let response = await fetch(url, {
       method: "GET",
       headers: {
@@ -28,7 +28,11 @@ export function AuthProvider({ children }) {
     response = await response.json();
     setStudentData(response.message);
   }
-  async function StudentLogin(userDetails,rollno) {
+  function setRollNumber(rollno){
+    localStorage.setItem("rollno", rollno);
+  }
+  async function StudentLogin(userDetails) {
+   
     let url = new URL("http://localhost:3001/app/users/login");
     let response = await fetch(url, {
       method: "POST",
@@ -37,25 +41,25 @@ export function AuthProvider({ children }) {
         authorization: localStorage.getItem("firebaseToken"),
       },
       body: JSON.stringify({
-       rollno:rollno
+        "rollno":localStorage.getItem("rollno")
+      
       }),
     });
-
+  
     if (response.status == 200) {
       Role.changeRole("student");
-      router.push("/Details")
+      router.push("/Details");
+      Cookies.set("rollno", userDetails.rollno, {
+        expires: 7,
+        path: "",
+        sameSite: "Strict",
+      });
     }
-    else{
-      alert("invalid credentials entered,please try again")
-    }
-
-    Role.changeRole("student");
-    Cookies.set("rollno", userDetails.rollno, { expires: 1 });
   }
-
+  
   async function getStudentResult() {
     let url = new URL(`http://localhost:3001/app/users/seeResult`);
-    
+
     let response = await fetch(url, {
       method: "GET",
       headers: {
@@ -68,8 +72,8 @@ export function AuthProvider({ children }) {
   }
   async function getStudentDetails() {
     let url = new URL(`http://localhost:3001/app/users/getDetails`);
-    
-  
+
+
     let response = await fetch(url, {
       method: "GET",
       headers: {
@@ -84,7 +88,7 @@ export function AuthProvider({ children }) {
 
   async function getStudentResult() {
     let url = new URL(`http://localhost:3001/app/users/getResult`);
-   
+
     let response = await fetch(url, {
       method: "GET",
       headers: {
@@ -97,7 +101,7 @@ export function AuthProvider({ children }) {
   }
   async function logout() {
     localStorage.removeItem("firebaseToken");
-    Role.changeRole("guest");
+    Role.changeRole(null);
     router.push("/Student_Services");
   }
   return (
@@ -112,9 +116,11 @@ export function AuthProvider({ children }) {
         studentFeesPaymentDetails,
         getStudentResult,
         logout,
+        setRollNumber
       }}
     >
       {children}
     </AuthContext.Provider>
   );
+  
 }

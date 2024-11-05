@@ -7,16 +7,15 @@ import { useRouter } from "next/navigation";
 import { FacultyContext } from "../Context/FacultyProvider";
 import Alert from "./Alert";
 export default function FacultyLogin() {
-  alert("hello guys")
+  const[rollno,setRollno]=useState(null)
   const [userDetails, setUserDetails] = useState({
     email: "",
-    rollNo: "",
-    password: "",
-  });
+   
+    password: "",});
   const [error, setError] = useState(null);
-  const User_Context = useContext(AuthContext);
+  const context = useContext(FacultyContext);
   const router = useRouter();
-  console.log(User_Context);
+  
   async function handleChange(e) {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   }
@@ -36,7 +35,8 @@ export default function FacultyLogin() {
       else{
         const token = await userCredential.user.getIdToken();
         localStorage.setItem("teacherFirebaseToken", token);
-        await FacultyContext.facultyLogin(userDetails);
+        localStorage.setItem("rollno", rollno);
+        await context.facultyLogin(userDetails);
         try {
          router.push("/Details");
         } catch (error) {
@@ -87,12 +87,12 @@ export default function FacultyLogin() {
                   id="rollno"
                   name="rollNo"
                   type="text"
-                  value={userDetails.rollNo}
+                  value={rollno}
                   onChange={(e) => {
-                    handleChange(e);
+                    setRollno(e.target.value);
                   }}
                   required
-                  autoComplete="email"
+                  autoComplete="rollno"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>

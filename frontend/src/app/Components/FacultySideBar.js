@@ -1,32 +1,31 @@
-"use client";
-
-import Link from "next/link";
+"use client"
 import { useRouter } from "next/navigation";
 import { FacultyContext } from "../Context/FacultyProvider";
 import { useContext } from "react";
+import Link from "next/link"
 export default function FacultySidebar() {
   const Router = useRouter();
   const context = useContext(FacultyContext);
   return (
     <>
-      <div class="relative flex h-full w-full max-w-[20rem] flex-col rounded-xl bg-white bg-clip-border p-4 text-gray-700 shadow-xl shadow-blue-gray-900/5">
-        <div class="p-4 mb-2">
-          <h5 class="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
+      <div className="relative flex h-full w-full max-w-[20rem] flex-col rounded-xl bg-white bg-clip-border p-4 text-gray-700 shadow-xl shadow-blue-gray-900/5">
+        <div className="p-4 mb-2">
+          <h5 className="block font-sans text-xl antialiased font-semibold leading-snug tracking-normal text-blue-gray-900">
             Faculty Corner
           </h5>
         </div>
-        <nav class="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
+        <nav className="flex min-w-[240px] flex-col gap-1 p-2 font-sans text-base font-normal text-blue-gray-700">
           <div
             role="button"
-            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+            className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
           >
-            <div class="grid mr-4 place-items-center">
+            <div className="grid mr-4 place-items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   fill-rule="evenodd"
@@ -39,15 +38,15 @@ export default function FacultySidebar() {
           </div>
           <div
             role="button"
-            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+            className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
           >
-            <div class="grid mr-4 place-items-center">
+            <div className="grid mr-4 place-items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   fill-rule="evenodd"
@@ -56,26 +55,26 @@ export default function FacultySidebar() {
                 ></path>
               </svg>
             </div>
-            <a
+            <div role="button"
               onClick={() => {
-                Router.push("Details/Personal_Details");
+                Router.push("/Details/Personal_Details");
               }}
             >
               Personal_Details
-            </a>
+            </div>
           </div>
 
           <div
             role="button"
-            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+            className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
           >
-            <div class="grid mr-4 place-items-center">
+            <div className="grid mr-4 place-items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   fill-rule="evenodd"
@@ -84,30 +83,30 @@ export default function FacultySidebar() {
                 ></path>
               </svg>
             </div>
-            <a
+            <div role="button"
               onClick={() => {
-                Router.push("Details/Student_List");
+                Router.push("/Details/Student_List");
               }}
             >
               Student List
-            </a>
-            <div class="grid ml-auto place-items-center justify-self-end">
-              <div class="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
-                <span class=""></span>
+            </div>
+            <div className="grid ml-auto place-items-center justify-self-end">
+              <div className="relative grid items-center px-2 py-1 font-sans text-xs font-bold uppercase rounded-full select-none whitespace-nowrap bg-blue-gray-500/20 text-blue-gray-900">
+                <span className=""></span>
               </div>
             </div>
           </div>
           <div
             role="button"
-            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+            className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
           >
-            <div class="grid mr-4 place-items-center">
+            <div className="grid mr-4 place-items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   fill-rule="evenodd"
@@ -116,19 +115,19 @@ export default function FacultySidebar() {
                 ></path>
               </svg>
             </div>
-            <Link href="/OnlineClasses">Start Online Class</Link>
+            <Link href="/OnlineclassNamees">Start Online Class</Link>
           </div>
           <div
             role="button"
-            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+            className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
           >
-            <div class="grid mr-4 place-items-center">
+            <div className="grid mr-4 place-items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   fill-rule="evenodd"
@@ -141,15 +140,15 @@ export default function FacultySidebar() {
           </div>
           <div
             role="button"
-            class="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
+            className="flex items-center w-full p-3 leading-tight transition-all rounded-lg outline-none text-start hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900 active:bg-blue-gray-50 active:bg-opacity-80 active:text-blue-gray-900"
           >
-            <div class="grid mr-4 place-items-center">
+            <div className="grid mr-4 place-items-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 aria-hidden="true"
-                class="w-5 h-5"
+                className="w-5 h-5"
               >
                 <path
                   fill-rule="evenodd"
@@ -158,13 +157,13 @@ export default function FacultySidebar() {
                 ></path>
               </svg>
             </div>
-            <a
+            <div role="button"
               onClick={() => {
                 context.logout();
               }}
             >
               Log Out
-            </a>
+            </div>
           </div>
         </nav>
       </div>
