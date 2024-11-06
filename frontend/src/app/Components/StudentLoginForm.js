@@ -38,15 +38,17 @@ export default function StudentLoginForm() {
         userDetails.email,
         userDetails.password
       );
-
-      const token = await userCredential.user.getIdToken();
-      localStorage.setItem("firebaseToken", token);
-
-      // Store rollno in localStorage after successful login (backup in case)
-      localStorage.setItem("rollno", "1210437010");
-
-      // Call StudentLogin from AuthContext
-      await User_Context.StudentLogin({ ...userDetails });
+      if(userCredential.user!==undefined){
+        const token = await userCredential.user.getIdToken();
+        localStorage.setItem("firebaseToken", token);
+  
+        // Store rollno in localStorage after successful login (backup in case)
+        localStorage.setItem("rollno", "1210437010");
+  
+        // Call StudentLogin from AuthContext
+        await User_Context.StudentLogin({ ...userDetails });
+      }
+      
     } catch (error) {
       console.error("Login error:", error);
     }

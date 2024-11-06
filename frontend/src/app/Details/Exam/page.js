@@ -4,11 +4,12 @@ import React, { useState, useContext } from 'react'
 import { AuthContext } from "@/app/Context/AuthProvider"
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from '@/app/utils/student_auth';
-import {useRouter} from  'next/navigation'
+import { useRouter } from 'next/navigation'
 export default function Page() {
   const [userDetails, setUserDetails] = useState({
     email: "",
     password: "",
+
   });
 
   const context = useContext(AuthContext);
@@ -25,16 +26,19 @@ export default function Page() {
         userDetails.email,
         userDetails.password
       );
-      const token = await userCredential.user.getIdToken();
-      localStorage.setItem("firebaseToken", token);
-
-      // Store rollno in localStorage after successful login (backup in case)
-      localStorage.setItem("rollno", "1210437010");
-
-      // Call StudentLogin from AuthContext
-      await context.StudentLogin({ ...userDetails });
-      let id ="1210437010"
-      router.push(`/Details/Exam/StartExam`)
+      if(userCredential.user!==undefined){
+        const token = await userCredential.user.getIdToken();
+        localStorage.setItem("firebaseToken", token);
+  
+        // Store rollno in localStorage after successful login (backup in case)
+        localStorage.setItem("rollno", "1210437010");
+  
+        // Call StudentLogin from AuthContext
+        await context.StudentLogin({ ...userDetails });
+        let id = "1210437010"
+        router.push(`/Details/Exam/StartExam`)
+      }
+      
 
 
     } catch (error) {

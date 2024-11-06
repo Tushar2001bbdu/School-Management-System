@@ -10,6 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-kinesis": "^3.685.0",
+    "@aws-sdk/client-kinesis-video": "^3.682.0",
+    "@aws-sdk/client-kinesis-video-media": "^3.682.0",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/material": "^6.0.2",
@@ -17,6 +20,7 @@
     "@preline/dropdown": "^2.4.1",
     "@zoomus/websdk": "^2.18.3",
     "chart.js": "^4.4.4",
+    "dotenv": "^16.4.5",
     "firebase": "^10.13.1",
     "js-cookie": "^3.0.5",
     "next": "^14.2.13",

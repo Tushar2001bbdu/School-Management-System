@@ -7,15 +7,16 @@ import { useRouter } from "next/navigation";
 import { FacultyContext } from "../Context/FacultyProvider";
 import Alert from "./Alert";
 export default function FacultyLogin() {
-  const[rollno,setRollno]=useState(null)
+  const [rollno, setRollno] = useState(null)
   const [userDetails, setUserDetails] = useState({
     email: "",
-   
-    password: "",});
+
+    password: "",
+  });
   const [error, setError] = useState(null);
   const context = useContext(FacultyContext);
   const router = useRouter();
-  
+
   async function handleChange(e) {
     setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   }
@@ -28,24 +29,22 @@ export default function FacultyLogin() {
         userDetails.email,
         userDetails.password
       );
-      if(userCredential.error!==undefined){
-        setError(true)
-        return;
-      }
-      else{
-        const token = await userCredential.user.getIdToken();
-        localStorage.setItem("teacherFirebaseToken", token);
-        localStorage.setItem("rollno", rollno);
-        await context.facultyLogin(userDetails);
-        try {
-         router.push("/Details");
-        } catch (error) {
-          console.log(error);
+      if (userCredential.user !== undefined) {
+        {
+          const token = await userCredential.user.getIdToken();
+          localStorage.setItem("teacherFirebaseToken", token);
+          localStorage.setItem("rollno", rollno);
+          await context.facultyLogin(userDetails);
+          try {
+            router.push("/Details");
+          } catch (error) {
+            console.log(error);
+          }
         }
+
       }
-      
     } catch (error) {
-     setError(true)
+      setError(true)
       console.log(error);
     }
   }
@@ -61,7 +60,7 @@ export default function FacultyLogin() {
             width={"64"}
             className="mx-auto h-20 w-auto"
           />
-          {error===true && <Alert message="invalid credentials entered"/> }
+          {error === true && <Alert message="invalid credentials entered" />}
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
           </h2>
