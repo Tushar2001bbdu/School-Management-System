@@ -1,13 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import questions from "../questions";
 import Webcam from "react-webcam";
-import { Kinesis,PutRecordCommand } from "@aws-sdk/client-kinesis";
+import { Kinesis, PutRecordCommand } from "@aws-sdk/client-kinesis";
 
 const kinesisClient = new Kinesis({
-  region: "ap-south-1",
+  region: process.env.NEXT_PUBLIC_REGION,
   credentials: {
-    accessKeyId:"AKIAXQIQAMFVRGHA4U5K" ,
-    secretAccessKey: "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",
+    accessKeyId: process.env.NEXT_PUBLIC_ACCESS_KEY_ID,
+    secretAccessKey: process.env.NEXT_PUBLIC_SECRET_ACCESS_KEY,
   },
 });
 
@@ -17,16 +17,21 @@ export default function OnlineExam() {
   const captureAndStream = async () => {
     if (webcamRef.current) {
       const imageSrc = webcamRef.current.getScreenshot();
-      
+
       try {
+
+        let base64Data = imageSrc.split(',')[1];
+
+        const buffer = new Uint8Array(atob(base64Data).split("").map((char) => char.charCodeAt(0)));
+
+        const key = `webcams/${Date.now()}.jpg`;
         const params = {
           StreamName: "SMS_OnlineExam",
           PartitionKey: "partitionKey1",
-          Data: imageSrc,
+          Data: buffer,
         };
-        
-        await kinesisClient.send(new PutRecordCommand(params));
-        console.log("Frame sent to Kinesis Data Stream!");
+        const response = await kinesisClient.send(new PutRecordCommand(params));
+        console.log(response);
       } catch (error) {
         console.error("Error streaming to Kinesis:", error);
       }
@@ -38,7 +43,7 @@ export default function OnlineExam() {
       <Webcam
         audio={true}
         ref={webcamRef}
-        screenshotFormat="image/jpeg"
+        screenshotFormat="image/jpeg;base64"
         style={{ width: '20%', height: '40%' }}
       />
       <div className="heading text-center">
