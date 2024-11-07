@@ -3,12 +3,7 @@ import questions from "../questions";
 import Webcam from "react-webcam";
 import { Kinesis, PutRecordCommand } from "@aws-sdk/client-kinesis";
 
-const kinesisClient = new Kinesis({
-  region: process.env.NEXT_PUBLIC_REGION,
-  credentials: {
-    
-  },
-});
+
 
 export default function OnlineExam() {
   const webcamRef = useRef(null);
