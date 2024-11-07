@@ -20,7 +20,7 @@ export default function OnlineExam() {
 
         const key = `webcams/${Date.now()}.jpg`;
         const params = {
-          StreamName: "SMS_OnlineExam",
+          StreamName: "abcd",
           PartitionKey: "partitionKey1",
           Data: buffer,
         };
