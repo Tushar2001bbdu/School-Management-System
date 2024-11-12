@@ -2,11 +2,18 @@ import React, { useRef, useEffect } from "react";
 import questions from "../questions";
 import Webcam from "react-webcam";
 import { Kinesis, PutRecordCommand } from "@aws-sdk/client-kinesis";
-
+import {REGION,ACCESS_KEY_ID,SECRET_ACCESS_KEY} from "@app/secrets/aws"
 
 
 export default function OnlineExam() {
   const webcamRef = useRef(null);
+  const kinesisClient = new Kinesis({
+    region: REGION,
+    credentials: {
+      accessKeyId: ACCESS_KEY_ID,
+      secretAccessKey: SECRET_ACCESS_KEY,
+    },
+  });
 
   const captureAndStream = async () => {
     if (webcamRef.current) {
