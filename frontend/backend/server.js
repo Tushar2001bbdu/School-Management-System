@@ -21,7 +21,7 @@ app.use("/app/details", require("./routes/management"));
 app.use("/app/teachers", require("./routes/teachers"));
 app.use("/app/attendance", require("./routes/attendance"));
 app.use("/app/onlineClass", require("./routes/onlineclass"));
-
+app.use("/app/exam", require("./routes/onlineexam"));
 
 const server = http.createServer(app);
 

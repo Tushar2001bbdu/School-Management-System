@@ -1,41 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useContext } from "react";
 import questions from "../questions";
 import Webcam from "react-webcam";
-import { Kinesis, PutRecordCommand } from "@aws-sdk/client-kinesis";
-import {REGION,ACCESS_KEY_ID,SECRET_ACCESS_KEY} from "@app/secrets/aws"
-
+import {AdminContext} from "../Context/AdminProvider"
 
 export default function OnlineExam() {
+  const context=useContext(AdminContext)
   const webcamRef = useRef(null);
-  const kinesisClient = new Kinesis({
-    region: REGION,
-    credentials: {
-      accessKeyId: ACCESS_KEY_ID,
-      secretAccessKey: SECRET_ACCESS_KEY,
-    },
-  });
+  
 
-  const captureAndStream = async () => {
-    if (webcamRef.current) {
-      const imageSrc = webcamRef.current.getScreenshot();
-
-      try {
-
-        let base64Data = imageSrc.split(',')[1];
-
-        const buffer = new Uint8Array(atob(base64Data).split("").map((char) => char.charCodeAt(0)));
-
-        const key = `webcams/${Date.now()}.jpg`;
-        const params = {
-          StreamName: "abcd",
-          PartitionKey: "partitionKey1",
-          Data: buffer,
-        };
-        const response = await kinesisClient.send(new PutRecordCommand(params));
-        console.log(response);
-      } catch (error) {
-        console.error("Error streaming to Kinesis:", error);
-      }
+  const captureImage = async () => {
+    const image = webcamRef.current.getScreenshot();
+    if (image) {
+      context.sendPhoto(image);
     }
   };
 
@@ -75,7 +51,7 @@ export default function OnlineExam() {
         <a
           href="#_"
           className="relative inline-flex items-center justify-center inline-block p-4 px-5 py-3 overflow-hidden font-medium text-indigo-600 rounded-lg shadow-2xl group"
-          onClick={captureAndStream}
+          onClick={captureImage}
         >
           <span className="relative text-white">Submit Answer</span>
         </a>

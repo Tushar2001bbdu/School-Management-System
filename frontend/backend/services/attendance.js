@@ -38,7 +38,7 @@ class attendance {
         Image: {
           S3Object: {
             Bucket: "school-management-system-bucket-testing",
-            Name: "webcams/1727593595373.jpg",
+            Name: `webcams/${key}.jpg`,
           },
         },
         MaxFaces: 5,

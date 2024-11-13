@@ -2,33 +2,50 @@
 
 import { createContext, useState, useContext } from 'react';
 import Cookies from 'js-cookie'
-// Create AuthContext
+
 export const AdminContext = createContext();
 
-// Create AuthProvider to wrap your app
+
 export function AdminProvider({ children }) {
 
   async function sendPhoto(image) {
-    console.log("blob", image)
     let url = `http://localhost:3001/app/attendance/sendphoto`;
     await fetch(url, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json", // If sending JSON data
+        "Content-Type": "application/json",
 
       }
       , body: JSON.stringify({
         "url": image,
-        "rollno":Cookies.get("rollno")
+        "rollno": Cookies.get("rollno")
       })
 
-      // For POST, PUT, PATCH requests where you are sending a body
+
     });
 
 
 
   }
+  async function sendPhoto(image) {
+    let url = `http://localhost:3001/app/exam/sendphoto`;
+    await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
 
+      }
+      , body: JSON.stringify({
+        "url": image,
+        "rollno": "1210438058"
+      })
+
+
+    });
+
+
+
+  }
 
 
 
