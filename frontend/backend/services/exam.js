@@ -17,7 +17,6 @@ class exam{
     
         try {
           await s3Client.send(new PutObjectCommand(frames_bucket));
-    
         } catch (error) {
           console.error(error);
         }

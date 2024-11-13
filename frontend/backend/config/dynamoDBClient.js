@@ -1,4 +1,3 @@
-// config/dynamoDBClient.js
 const { DynamoDBClient } = require("@aws-sdk/client-dynamodb");
 require("dotenv").config();
 

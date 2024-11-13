@@ -1,4 +1,3 @@
-// backend/db.js
 const mongoose=require('mongoose');
 
 const MONGO_URI = "mongodb://localhost:27017/Results";

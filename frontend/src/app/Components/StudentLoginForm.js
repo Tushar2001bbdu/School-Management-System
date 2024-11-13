@@ -4,8 +4,7 @@ import Image from "next/image";
 import { AuthContext } from "../Context/AuthProvider";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Auth } from "../utils/student_auth";
-import { useRouter } from "next/navigation";
-
+import Cookies from 'js-cookie';
 export default function StudentLoginForm() {
   const [userDetails, setUserDetails] = useState({
     email: "",
@@ -19,12 +18,7 @@ export default function StudentLoginForm() {
     const { name, value } = e.target;
     setUserDetails(prevDetails => {
       const updatedDetails = { ...prevDetails, [name]: value };
-
-      // Save rollno to localStorage immediately if it's being updated
-      if (name === "rollno" && value) {
-        localStorage.setItem("rollno", value);
-        console.log("Roll number saved to localStorage:", value); // Debugging
-      }
+      
 
       return updatedDetails;
     });
@@ -38,17 +32,18 @@ export default function StudentLoginForm() {
         userDetails.email,
         userDetails.password
       );
-      if(userCredential.user!==undefined){
+      if (userCredential.user !== undefined) {
         const token = await userCredential.user.getIdToken();
         localStorage.setItem("firebaseToken", token);
-  
-        // Store rollno in localStorage after successful login (backup in case)
-        localStorage.setItem("rollno", "1210437010");
-  
-        // Call StudentLogin from AuthContext
+
+
+        Cookies.set("rollno", "1210438058");
+    
+
+
         await User_Context.StudentLogin({ ...userDetails });
       }
-      
+
     } catch (error) {
       console.error("Login error:", error);
     }
